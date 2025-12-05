@@ -1,0 +1,17 @@
+/* Teste de Robustez Lexica - C- */
+
+int main(void) {
+    /* 1. Teste de caracteres ilegais */
+    int _var = 10;      /* Erro no _ */
+    int valor$;         /* Erro no $ */
+    
+    /* 2. Teste de tipos nao suportados */
+    int pi = 3.1415;    /* Erro no . */
+    
+    /* 3. Strings e chars (nao existem em C-) */
+    output("Alo");      /* Erro nas aspas */
+    
+    /* 4. Operador incompleto */
+    if (x ! = 0) {      /* Erro no ! separado */
+        return 0;
+    }

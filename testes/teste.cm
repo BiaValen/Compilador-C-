@@ -1,0 +1,17 @@
+/* Um programa de teste simples */
+int main(void) {
+    int x;
+    x = 10;
+    
+    /* Testando comentario
+       de varias linhas */
+       
+    if (x > 0) {
+        return x;
+    }
+    
+    int erro = @; /* Esse @ deve dar erro lexico */
+}
+
+
+
