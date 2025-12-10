@@ -948,7 +948,7 @@ YY_RULE_SETUP
     do{
         c = input();
         if (c == 0){
-            printf("ERRO LEXICO: Comentario nao terminado LINHA: %d\n", inicComent);
+            printf("ERRO LEXICO: Comentario nao terminado - LINHA: %d\n", inicComent);
             break;
         }
         if (c == '\n') 

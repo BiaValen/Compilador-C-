@@ -11,6 +11,8 @@
     #include <scan.h>
     #include <ctype.h>
 
+    #include "sintax.tab.h"
+
     static int yylex(void);
 
 
@@ -29,6 +31,8 @@ espacobranco [ \t\r]
 
 %%
 
+{novalinha} {linhano++;}
+{espacobranco} ; 
 "else"       {return ELSE;}
 "if"         {return IF;}
 "int"        {return INT;}
@@ -47,7 +51,7 @@ espacobranco [ \t\r]
 ">"	         {return MAIOR;}
 ">="	     {return MAIORIG;}
 "=="         {return IGUALD;}
-"!="         { return DIFF;}
+"!="         {return DIFF;}
 "="          {return ATRIB;}
 
 
@@ -61,13 +65,8 @@ espacobranco [ \t\r]
 "}"          {return FCHAV;}
 
 
-{numero} {return NUM;}
-
-
-{id}    {return ID;}
-
-{novalinha} {linhano++;}
-{espacobranco} ; 
+{id}    {yylval.sval = strdup(yytext); return ID;}
+{numero} {yylval.ival = atoi(yytext); return NUM;}
 
 "/*"   { 
     char c;
