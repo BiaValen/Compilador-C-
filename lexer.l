@@ -1,8 +1,8 @@
 %option noyywrap
 
-//DEFINIÇÕES
+
 %{
-    
+    //DEFINICOES E INCLUDES
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
@@ -13,24 +13,22 @@
 
     static int yylex(void);
 
-    #include "ex1.tab.h"
 
     //Variavel para contar as linhas
     int linhano = 1;
 %}
 
-//
+
 digito     [0-9]
 letra      [a-zA-Z]
-numero    {digito}+
-id        {letra}({letra}|{digito})*
+numero    {digito}({digito})*
+id        {letra}({letra})*
 novalinha \n
 espacobranco [ \t\r]
 
-//REGRAS
+
 %%
 
-//palavra reservada
 "else"       {return ELSE;}
 "if"         {return IF;}
 "int"        {return INT;}
@@ -38,7 +36,7 @@ espacobranco [ \t\r]
 "void"	     {return VOID;}
 "while"      {return WHILE;}
 
-//operadores
+
 "+"          {return MAIS;}
 "-"          {return SUB;}
 "*"          {return MULT;}
@@ -52,7 +50,7 @@ espacobranco [ \t\r]
 "!="         { return DIFF;}
 "="          {return ATRIB;}
 
-//delimitadores
+
 ";"          {return PONTV;}
 ","          {return VIRG;}
 "("          {return APAR;}
@@ -65,19 +63,20 @@ espacobranco [ \t\r]
 
 {numero} {return NUM;}
 
-//Identificadores
+
 {id}    {return ID;}
 
 {novalinha} {linhano++;}
-{espacobranco} ; //ignorar espacos em branco
+{espacobranco} ; 
 
 "/*"   { 
     char c;
     char p='\0';
+    int inicComent = linhano;
     do{
-        c = input(); //Funcao do flex que puxa o proximo caracter
-        if (c == EOF){
-            printf("ERRO LEXICO: Comentario nao terminado LINHA: %d\n", linhano);
+        c = input();
+        if (c == 0){
+            printf("ERRO LEXICO: Comentario nao terminado - LINHA: %d\n", inicComent);
             break;
         }
         if (c == '\n') 
@@ -87,10 +86,10 @@ espacobranco [ \t\r]
         p = c;
     } while (1);
     }
-.       { printf("ERRO LEXICO: '%s' LINHA: %d\n", yytext, linhano); }
+.       { printf("ERRO LEXICO: ''%s'' - LINHA: %d\n", yytext, linhano); }
 
 %%
-
+'
 
 //CÓDIGO DO USUÁRIO
 

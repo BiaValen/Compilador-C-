@@ -1,0 +1,23 @@
+/* Teste com while e operadores */
+int fatorial(int n) {
+    int resultado;
+    resultado = 1;
+    
+    while (n > 1) {
+        resultado = resultado * n;
+        n = n - 1;
+    }
+    
+    return resultado;
+}
+
+int main(void) {
+    int x;
+    x = fatorial(5);
+    
+    if (x >= 100) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
