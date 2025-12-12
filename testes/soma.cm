@@ -1,8 +1,8 @@
 /* Programa simples de soma */
-int soma_(int a, int b) {
-    return a + b////;
+int soma(int a, int b) {
+    return a + b;
 }
-/*
+
 int main(void) {
     int resultado;
     resultado = soma(5, 3);

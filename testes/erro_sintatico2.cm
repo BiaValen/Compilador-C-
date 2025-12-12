@@ -1,0 +1,4 @@
+/* Programa com erro sintático - palavra-chave errada */
+integer main(void) {
+    return 0;
+}

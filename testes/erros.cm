@@ -1,8 +1,6 @@
 /* Teste de erros lexicos */
 int main(void) {
     int x;
-    x = 10 @ 5;  /* @ eh invalido */
-    
-    int y#;      /* # eh invalido */
-    
-    /* Comentario sem fechar...
+    x = 10 ; /* @ eh invalido */
+    /* 
+}

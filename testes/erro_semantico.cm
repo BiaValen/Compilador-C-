@@ -1,0 +1,4 @@
+/* Teste de erro semântico: variável não declarada */
+int main(void) {
+    return x;
+}

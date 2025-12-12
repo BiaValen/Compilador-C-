@@ -6,18 +6,15 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
-    #include <globals.h>
-    #include <util.h>
-    #include <scan.h>
     #include <ctype.h>
 
     #include "sintax.tab.h"
 
-    static int yylex(void);
-
+    #define YY_DECL int yylex()
 
     //Variavel para contar as linhas
     int linhano = 1;
+
 %}
 
 
@@ -32,7 +29,7 @@ espacobranco [ \t\r]
 %%
 
 {novalinha} {linhano++;}
-{espacobranco} ; 
+{espacobranco} {}
 "else"       {return ELSE;}
 "if"         {return IF;}
 "int"        {return INT;}
@@ -74,9 +71,9 @@ espacobranco [ \t\r]
     int inicComent = linhano;
     do{
         c = input();
-        if (c == 0){
+        if (c == EOF){
             printf("ERRO LEXICO: Comentario nao terminado - LINHA: %d\n", inicComent);
-            break;
+            exit(EXIT_FAILURE);
         }
         if (c == '\n') 
             linhano++;
@@ -85,37 +82,36 @@ espacobranco [ \t\r]
         p = c;
     } while (1);
     }
-.       { printf("ERRO LEXICO: ''%s'' - LINHA: %d\n", yytext, linhano); }
+
+.       { printf("ERRO LEXICO: '%s' - LINHA: %d\n", yytext, linhano); exit(EXIT_FAILURE); }
 
 %%
-'
-
 //CÓDIGO DO USUÁRIO
 
-extern FILE *yyin;
-int main(int argc, char *argv[]) {
-    if(argc > 1){
-        yyin = fopen(argv[1], "r");
-        if(yyin == NULL){
-            fprintf(stderr, "Problema na leitura do arquivo!");
-            return 1; // Erro de tipo 1
-        }
-    }
-    else{
-        yyin = fopen("testes/teste.cm", "r");        
-        if(yyin == NULL){
-            fprintf(stderr, "Problema na leitura do arquivo!");
-            return 1; // Erro de tipo 1
-        }
-    }
+//extern FILE *yyin;
+//int main(int argc, char *argv[]) {
+//    if(argc > 1){
+//        yyin = fopen(argv[1], "r");
+//        if(yyin == NULL){
+//            fprintf(stderr, "Problema na leitura do arquivo!");
+//            return 1; // Erro de tipo 1
+//        }
+//    }
+//   else{
+//        yyin = fopen("testes/teste.cm", "r");        
+//        if(yyin == NULL){
+//            fprintf(stderr, "Problema na leitura do arquivo!");
+//            return 1; // Erro de tipo 1
+//       }
+//    }
+//
+//    yylex();
+//    return 0;
+//}
 
-    yylex();
-    return 0;
-}
-
-int yywrap() {
-    return 1;
-}
+//int yywrap() {
+//    return 1;
+//}
 
 
 

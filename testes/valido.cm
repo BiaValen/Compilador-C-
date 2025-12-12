@@ -1,0 +1,4 @@
+/* Programa válido simples */
+int main(void) {
+    return 0;
+}
