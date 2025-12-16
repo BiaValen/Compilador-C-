@@ -1,0 +1,27 @@
+int adicao(int x, int y){
+    x = x + y;
+    return x;
+}
+
+void main(void){
+    int x;
+    int i;
+    int y;
+    int u;
+
+    x = input();
+    y = input();
+
+    /* Inicialização do for */
+    i = 0;
+    
+    /* Condição do for virou while */
+    while (i <= x){
+        u = adicao(x, y);
+        
+        /* Incremento do for */
+        i = i + 1;
+    }
+
+    output(u);
+}

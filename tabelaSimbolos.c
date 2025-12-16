@@ -28,6 +28,10 @@ void criaTabela() {
     for (i = 0; i < SIZE; i++) {
         hashTable[i] = NULL;
     }
+    
+    /* Adiciona funcoes built-in (input e output) */
+    insere_ts("input", 0, 0, "global", "fun", "int");
+    insere_ts("output", 0, 0, "global", "fun", "void");
 }
 
 /* Libera toda a memória da tabela hash */

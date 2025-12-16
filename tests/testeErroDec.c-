@@ -1,0 +1,12 @@
+/* Teste de Erros Semanticos */
+void main(void) {
+    int x;
+    int y;
+    int x; /* ERRO 1: Redeclaracao no mesmo escopo */
+    
+    x = 10;
+    z = 20; /* ERRO 2: Variavel nao declarada */
+    
+    /* ERRO 3: Atribuindo o retorno de uma funcao VOID (output) para uma variavel INT */
+    y = output(x); 
+}

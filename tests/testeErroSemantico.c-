@@ -1,0 +1,8 @@
+void main(void) {
+    int x;
+    /* Erro: y nao foi declarado */
+    x = y;
+    
+    /* Erro: atribuindo valor a void */
+    output(x);
+}

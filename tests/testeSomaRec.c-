@@ -1,0 +1,23 @@
+int v[5];
+
+/* Soma os elementos do indice k ate 0 */
+int soma_rec(int k) {
+    if (k < 0) 
+        return 0;
+    else
+        return v[k] + soma_rec(k - 1);
+}
+
+void main(void) {
+    int i;
+    i = 0;
+    
+    /* Preenche: 1, 2, 3, 4, 5 */
+    while (i < 5) {
+        v[i] = i + 1;
+        i = i + 1;
+    }
+    
+    /* Chama recursao com o indice 4 (ultimo elemento) */
+    output(soma_rec(4));
+}

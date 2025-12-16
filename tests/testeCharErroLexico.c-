@@ -1,0 +1,8 @@
+void main(void) {
+    int x;
+    /* C-Minus nao tem string, isso deve dar ERRO LEXICO */
+    x = "ola mundo";
+    
+    /* C-Minus nao tem char, isso tambem falha */
+    x = 'c';
+}

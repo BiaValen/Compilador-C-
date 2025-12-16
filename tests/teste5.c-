@@ -1,0 +1,20 @@
+/* Comentario 
+   de multiplas 
+   linhas no inicio */
+int /**/ x; 
+
+int quadrado(int n) {
+    return n * n; /* Comentario inline */
+}
+
+void main(void) {
+    int i;
+    i = 0;
+    while (i < 10) {
+        x = input();
+        output(quadrado(
+            x /* comentario no meio de argumento */
+        ));
+        i = i + 1;
+    }
+}

@@ -1,0 +1,24 @@
+int v[5]; 
+
+void main(void) { 
+    int i; 
+    int soma; 
+    
+    i = 0; 
+    soma = 0; 
+    
+    /* Leitura */
+    while(i < 5) { 
+        v[i] = input(); 
+        i = i + 1; 
+    } 
+    
+    /* Soma */
+    i = 0; 
+    while(i < 5) { 
+        soma = soma + v[i]; 
+        i = i + 1; 
+    } 
+    
+    output(soma); 
+}

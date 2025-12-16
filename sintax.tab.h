@@ -91,12 +91,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 24 "sintax.y"
+#line 39 "sintax.y"
 
-    int ival;
-    char* sval;
+    TreeNode * node;
+    char * string;
+    int val;
+    int op;
 
-#line 100 "sintax.tab.h"
+#line 102 "sintax.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

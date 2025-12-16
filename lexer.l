@@ -7,13 +7,15 @@
     #include <stdlib.h>
     #include <string.h>
     #include <ctype.h>
+    #include "globals.h"
+    #include "util.h"
 
     #include "sintax.tab.h"
 
     #define YY_DECL int yylex()
 
-    //Variavel para contar as linhas
-    int linhano = 1;
+    //Variavel para contar as linhas (definida em util.c)
+    extern int linha_atual;
 
 %}
 
@@ -28,7 +30,7 @@ espacobranco [ \t\r]
 
 %%
 
-{novalinha} {linhano++;}
+{novalinha} {linha_atual++;}
 {espacobranco} {}
 "else"       {return ELSE;}
 "if"         {return IF;}
@@ -62,13 +64,13 @@ espacobranco [ \t\r]
 "}"          {return FCHAV;}
 
 
-{id}    {yylval.sval = strdup(yytext); return ID;}
-{numero} {yylval.ival = atoi(yytext); return NUM;}
+{id}    {yylval.string = strdup(yytext); return ID;}
+{numero} {yylval.val = atoi(yytext); return NUM;}
 
 "/*"   { 
     char c;
     char p='\0';
-    int inicComent = linhano;
+    int inicComent = linha_atual;
     do{
         c = input();
         if (c == EOF){
@@ -76,14 +78,14 @@ espacobranco [ \t\r]
             exit(EXIT_FAILURE);
         }
         if (c == '\n') 
-            linhano++;
+            linha_atual++;
         if (p == '*' && c == '/') 
             break;
         p = c;
     } while (1);
     }
 
-.       { printf("ERRO LEXICO: '%s' - LINHA: %d\n", yytext, linhano); exit(EXIT_FAILURE); }
+.       { printf("ERRO LEXICO: '%s' - LINHA: %d\n", yytext, linha_atual); exit(EXIT_FAILURE); }
 
 %%
 //CÓDIGO DO USUÁRIO

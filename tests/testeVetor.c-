@@ -1,0 +1,25 @@
+int a[5];
+int b[5];
+
+void main(void) {
+    int i;
+    int total;
+    
+    i = 0;
+    /* Preenche os vetores */
+    while (i < 5) {
+        a[i] = i + 1; /* 1, 2, 3, 4, 5 */
+        b[i] = 2;     /* 2, 2, 2, 2, 2 */
+        i = i + 1;
+    }
+    
+    total = 0;
+    i = 0;
+    /* Calcula produto escalar */
+    while (i < 5) {
+        total = total + (a[i] * b[i]);
+        i = i + 1;
+    }
+    
+    output(total);
+}
