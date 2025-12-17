@@ -13,6 +13,9 @@
 
     /* Contador de posição de memória */
     int localizacao = 0;
+    int ContadorBloco = 1;
+
+    char escopoAnterior[50];
  
     extern int linha_atual;
     extern int yylex();
@@ -158,6 +161,7 @@
          
          /* Zera localizador de memória para as variáveis locais */
          localizacao = 0; 
+         ContadorBloco = 1;
         }
         APAR params FPAR compound_stmt
         {
@@ -200,13 +204,27 @@
     ;
 
     compound_stmt:
-        ACHAV local_declarations statement_list FCHAV
-        {
+    ACHAV
+    {
+        /* Salva escopo atual */
+        strcpy(escopoAnterior, escopo);
+
+        /* Cria escopo novo (bloco anônimo) */
+        static int bloco = 1;
+        char buffer[50];
+        sprintf(buffer, "%s_B%d", escopo, ContadorBloco++);
+        escopo = strdup(buffer);
+    }
+    local_declarations statement_list FCHAV
+    {
         $$ = newStmtNode(CompoundK);
-        $$->child[0] = $2; /* Declarações locais */
-        $$->child[1] = $3; /* Lista de comandos */
-        }
-    ;
+        $$->child[0] = $3;
+        $$->child[1] = $4;
+
+        /* Restaura escopo */
+        escopo = strdup(escopoAnterior);
+    }
+ ;
 
     local_declarations:
         local_declarations var_declaration     { $$ = addSibling($1, $2); }

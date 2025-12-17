@@ -128,14 +128,38 @@ Tabela verifica_ts ( char * name, char* scope ) {
     return l; /* Retorna o símbolo ou NULL */
 }
 
+void sobe_escopo(char *scope) {
+    char *p = strrchr(scope, '_');
+    if (p != NULL)
+        *p = '\0';
+    else
+        strcpy(scope, "global");
+}
+
 /* Verifica se variável foi declarada - retorna 1 se encontrou, 0 se não */
 int verifica_declarada(char* name, char* scope, int linha) {
-    Tabela l = verifica_ts(name, scope);
-    if (l == NULL) {
-        fprintf(stderr, "ERRO SEMANTICO: Variavel '%s' nao declarada - LINHA %d:\n", name, linha);
-        return 0;
+    char escopoTemp[100];
+    strcpy(escopoTemp, scope);
+
+    /* Sobe na cadeia de escopos */
+    while (1) {
+        Tabela l = verifica_ts(name, escopoTemp);
+        if (l != NULL)
+            return 1; /* Encontrada */
+
+        /* Se já chegou no global e não achou */
+        if (strcmp(escopoTemp, "global") == 0)
+            break;
+
+        sobe_escopo(escopoTemp);
     }
-    return 1;
+
+    fprintf(stderr,
+        "ERRO SEMANTICO: Variavel '%s' nao declarada - LINHA %d:\n",
+        name, linha
+    );
+
+    return 0;
 }
 
 /* Imprime a Tabela Formatada */

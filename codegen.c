@@ -171,6 +171,7 @@ static char * cGen(TreeNode * tree) {
             cGen(tree->child[1]); /* Corpo da função */
             /* Retorno padrão caso o usuário esqueça */
             /* printf("return\n"); (Opcional) */ 
+            printf("end %s\n \n ", tree->attr.name); 
         }
         break;
     }

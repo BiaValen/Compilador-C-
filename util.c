@@ -4,7 +4,7 @@
 #include <string.h>
 
 /* Variável global para controlar a linha atual */
-int linha_atual = 0;
+int linha_atual = 1;
 
 /* Função para copiar strings */
 char * copyString(char * s) {

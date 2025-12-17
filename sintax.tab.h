@@ -91,7 +91,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 39 "sintax.y"
+#line 42 "sintax.y"
 
     TreeNode * node;
     char * string;
