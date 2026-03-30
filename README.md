@@ -2,6 +2,8 @@
 
 Implementação de um compilador completo para a linguagem C- (C Minus), uma linguagem simplificada baseada em C, desenvolvida como projeto final da disciplina de Compiladores.
 
+Continuação para o Lab de Compiladores
+
 ## Funcionalidades Implementadas
 
 ### Análise Léxica
