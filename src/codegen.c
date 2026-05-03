@@ -5,13 +5,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* Contador para variáveis temporárias (t1, t2, t3...) */
+/* contador para variáveis temporárias (t1, t2, t3...) */
 static int tmpOffset = 0;
 
-/* Contador para labels (L1, L2...) usados em IF/WHILE */
+/* contador para labels (L1, L2...) IF/WHILE */
 static int labelOffset = 0;
 
-/* Gera um novo nome temporário (t1, t2...) */
+/* gera um novo nome temporário (t1, t2...) */
 static char * newTemp() {
     static char buffer[10];
     sprintf(buffer, "t%d", ++tmpOffset);
@@ -20,7 +20,7 @@ static char * newTemp() {
     return s;
 }
 
-/* Gera um novo label (L1, L2...) */
+/* gera um novo label (L1, L2...) */
 static char * newLabel() {
     static char buffer[10];
     sprintf(buffer, "L%d", ++labelOffset);
@@ -29,12 +29,12 @@ static char * newLabel() {
     return s;
 }
 
-/* Função recursiva principal para gerar código */
+/* função recursiva principal para gerar código */
 static char * cGen(TreeNode * tree) {
     char * p1, * p2;
     char * label1, * label2;
     char * currentTemp;
-    char * result = NULL; /* Variável para armazenar o retorno sem sair da função */
+    char * result = NULL; /* variável para armazenar o retorno sem sair da função */
 
     if (tree == NULL) return NULL;
 
@@ -45,7 +45,7 @@ static char * cGen(TreeNode * tree) {
             case IfK:
                 p1 = cGen(tree->child[0]); /* Condição */
                 label1 = newLabel(); /* Label para o ELSE (ou fim) */
-                label2 = newLabel(); /* Label para o FIM */
+                label2 = newLabel(); /* label para o FIM */
                 
                 printf("ifFalse %s goto %s\n", p1, label1);
                 
@@ -176,7 +176,7 @@ static char * cGen(TreeNode * tree) {
         break;
     }
     
-    /* O SEGREDO ESTÁ AQUI: Processa o próximo comando (irmão) */
+    /*Processa o próximo comando (irmão) */
     /* Se tivermos dado 'return' lá em cima, essa linha nunca seria executada */
     cGen(tree->sibling);
     

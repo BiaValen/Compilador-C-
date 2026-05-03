@@ -36,7 +36,7 @@
     }
 %}
 
-%define parse.error verbose
+%error-verbose
 
 /* DEFINIÇÃO DA UNIÃO (Tipos de dados que o Bison manipula) */
 %union {
