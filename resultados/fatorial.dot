@@ -1,0 +1,93 @@
+digraph AST {
+  node [fontname="Arial"];
+  node000002c2ea89b7b0 [label="func:fatorial", shape=box];
+  node000002c2ea89b7b0 -> node000002c2ea89a170;
+  node000002c2ea89a170 [label="param:n", shape=box];
+  node000002c2ea89b7b0 -> node000002c2ea89b990;
+  node000002c2ea89b990 [label="Compound", shape=box];
+  node000002c2ea89b990 -> node000002c2ea89a300;
+  node000002c2ea89a300 [label="var:resultado", shape=box];
+  node000002c2ea89b990 -> node000002c2ea89aef0;
+  node000002c2ea89aef0 [label="=", shape=box];
+  node000002c2ea89aef0 -> node000002c2ea89aa40;
+  node000002c2ea89aa40 [label="resultado", shape=box];
+  node000002c2ea89aef0 -> node000002c2ea89aea0;
+  node000002c2ea89aea0 [label="1", shape=box];
+  { rank=same; node000002c2ea89aef0; node000002c2ea89b440; }
+  node000002c2ea89aef0 -> node000002c2ea89b440 [style=dashed];
+  node000002c2ea89b440 [label="While", shape=box];
+  node000002c2ea89b440 -> node000002c2ea89afe0;
+  node000002c2ea89afe0 [label=">", shape=box];
+  node000002c2ea89afe0 -> node000002c2ea89af40;
+  node000002c2ea89af40 [label="n", shape=box];
+  node000002c2ea89afe0 -> node000002c2ea89af90;
+  node000002c2ea89af90 [label="1", shape=box];
+  node000002c2ea89b440 -> node000002c2ea89b8a0;
+  node000002c2ea89b8a0 [label="Compound", shape=box];
+  node000002c2ea89b8a0 -> node000002c2ea89b170;
+  node000002c2ea89b170 [label="=", shape=box];
+  node000002c2ea89b170 -> node000002c2ea89b030;
+  node000002c2ea89b030 [label="resultado", shape=box];
+  node000002c2ea89b170 -> node000002c2ea89b120;
+  node000002c2ea89b120 [label="*", shape=box];
+  node000002c2ea89b120 -> node000002c2ea89b080;
+  node000002c2ea89b080 [label="resultado", shape=box];
+  node000002c2ea89b120 -> node000002c2ea89b0d0;
+  node000002c2ea89b0d0 [label="n", shape=box];
+  { rank=same; node000002c2ea89b170; node000002c2ea89b5d0; }
+  node000002c2ea89b170 -> node000002c2ea89b5d0 [style=dashed];
+  node000002c2ea89b5d0 [label="=", shape=box];
+  node000002c2ea89b5d0 -> node000002c2ea89b1c0;
+  node000002c2ea89b1c0 [label="n", shape=box];
+  node000002c2ea89b5d0 -> node000002c2ea89b800;
+  node000002c2ea89b800 [label="-", shape=box];
+  node000002c2ea89b800 -> node000002c2ea89b210;
+  node000002c2ea89b210 [label="n", shape=box];
+  node000002c2ea89b800 -> node000002c2ea89b260;
+  node000002c2ea89b260 [label="1", shape=box];
+  { rank=same; node000002c2ea89b440; node000002c2ea89b6c0; }
+  node000002c2ea89b440 -> node000002c2ea89b6c0 [style=dashed];
+  node000002c2ea89b6c0 [label="Return", shape=box];
+  node000002c2ea89b6c0 -> node000002c2ea89b490;
+  node000002c2ea89b490 [label="resultado", shape=box];
+  { rank=same; node000002c2ea89b7b0; node000002c2ea89c4a0; }
+  node000002c2ea89b7b0 -> node000002c2ea89c4a0 [style=dashed];
+  node000002c2ea89c4a0 [label="func:main", shape=box];
+  node000002c2ea89c4a0 -> node000002c2ea89b3f0;
+  node000002c2ea89b3f0 [label="Compound", shape=box];
+  node000002c2ea89b3f0 -> node000002c2ea89b670;
+  node000002c2ea89b670 [label="var:x", shape=box];
+  node000002c2ea89b3f0 -> node000002c2ea89b710;
+  node000002c2ea89b710 [label="=", shape=box];
+  node000002c2ea89b710 -> node000002c2ea89b850;
+  node000002c2ea89b850 [label="x", shape=box];
+  node000002c2ea89b710 -> node000002c2ea89b620;
+  node000002c2ea89b620 [label="call(fatorial)", shape=box];
+  node000002c2ea89b620 -> node000002c2ea89ba30;
+  node000002c2ea89ba30 [label="5", shape=box];
+  { rank=same; node000002c2ea89b710; node000002c2ea89b3a0; }
+  node000002c2ea89b710 -> node000002c2ea89b3a0 [style=dashed];
+  node000002c2ea89b3a0 [label="If", shape=box];
+  node000002c2ea89b3a0 -> node000002c2ea89b4e0;
+  node000002c2ea89b4e0 [label=">=", shape=box];
+  node000002c2ea89b4e0 -> node000002c2ea89b300;
+  node000002c2ea89b300 [label="x", shape=box];
+  node000002c2ea89b4e0 -> node000002c2ea89b760;
+  node000002c2ea89b760 [label="100", shape=box];
+  node000002c2ea89b3a0 -> node000002c2ea89b9e0;
+  node000002c2ea89b9e0 [label="Compound", shape=box];
+  node000002c2ea89b9e0 -> node000002c2ea89b940;
+  node000002c2ea89b940 [label="Return", shape=box];
+  node000002c2ea89b940 -> node000002c2ea89b8f0;
+  node000002c2ea89b8f0 [label="1", shape=box];
+  node000002c2ea89b3a0 -> node000002c2ea89b580;
+  node000002c2ea89b580 [label="Compound", shape=box];
+  node000002c2ea89b580 -> node000002c2ea89b530;
+  node000002c2ea89b530 [label="Return", shape=box];
+  node000002c2ea89b530 -> node000002c2ea89b350;
+  node000002c2ea89b350 [label="0", shape=box];
+}
+ 
+ _entry main
+ 
+ 

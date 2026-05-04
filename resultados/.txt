@@ -1,0 +1,401 @@
+
+=== ARVORE SINTATICA ===
+digraph AST {
+  node [fontname="Arial"];
+  node000002c87860a070 [label="var:vet", shape=box];
+  node000002c87860a070 -> node000002c87860a0e0;
+  node000002c87860a0e0 [label="10", shape=box];
+  { rank=same; node000002c87860a070; node000002c87860c100; }
+  node000002c87860a070 -> node000002c87860c100 [style=dashed];
+  node000002c87860c100 [label="func:minloc", shape=box];
+  node000002c87860c100 -> node000002c87860a8c0;
+  node000002c87860a8c0 [label="param:a", shape=box];
+  { rank=same; node000002c87860a8c0; node000002c87860a970; }
+  node000002c87860a8c0 -> node000002c87860a970 [style=dashed];
+  node000002c87860a970 [label="param:low", shape=box];
+  { rank=same; node000002c87860a970; node000002c87860aa20; }
+  node000002c87860a970 -> node000002c87860aa20 [style=dashed];
+  node000002c87860aa20 [label="param:high", shape=box];
+  node000002c87860c100 -> node000002c87860c330;
+  node000002c87860c330 [label="Compound", shape=box];
+  node000002c87860c330 -> node000002c87860aaf0;
+  node000002c87860aaf0 [label="var:i", shape=box];
+  { rank=same; node000002c87860aaf0; node000002c87860abc0; }
+  node000002c87860aaf0 -> node000002c87860abc0 [style=dashed];
+  node000002c87860abc0 [label="var:x", shape=box];
+  { rank=same; node000002c87860abc0; node000002c87860b0a0; }
+  node000002c87860abc0 -> node000002c87860b0a0 [style=dashed];
+  node000002c87860b0a0 [label="var:k", shape=box];
+  node000002c87860c330 -> node000002c87860b210;
+  node000002c87860b210 [label="=", shape=box];
+  node000002c87860b210 -> node000002c87860b170;
+  node000002c87860b170 [label="k", shape=box];
+  node000002c87860b210 -> node000002c87860b1c0;
+  node000002c87860b1c0 [label="low", shape=box];
+  { rank=same; node000002c87860b210; node000002c87860b350; }
+  node000002c87860b210 -> node000002c87860b350 [style=dashed];
+  node000002c87860b350 [label="=", shape=box];
+  node000002c87860b350 -> node000002c87860b260;
+  node000002c87860b260 [label="x", shape=box];
+  node000002c87860b350 -> node000002c87860b300;
+  node000002c87860b300 [label="a", shape=box];
+  node000002c87860b300 -> node000002c87860b2b0;
+  node000002c87860b2b0 [label="low", shape=box];
+  { rank=same; node000002c87860b350; node000002c87860b7b0; }
+  node000002c87860b350 -> node000002c87860b7b0 [style=dashed];
+  node000002c87860b7b0 [label="=", shape=box];
+  node000002c87860b7b0 -> node000002c87860b3a0;
+  node000002c87860b3a0 [label="i", shape=box];
+  node000002c87860b7b0 -> node000002c87860b440;
+  node000002c87860b440 [label="+", shape=box];
+  node000002c87860b440 -> node000002c87860b710;
+  node000002c87860b710 [label="low", shape=box];
+  node000002c87860b440 -> node000002c87860b760;
+  node000002c87860b760 [label="1", shape=box];
+  { rank=same; node000002c87860b7b0; node000002c87860c560; }
+  node000002c87860b7b0 -> node000002c87860c560 [style=dashed];
+  node000002c87860c560 [label="While", shape=box];
+  node000002c87860c560 -> node000002c87860b800;
+  node000002c87860b800 [label="<", shape=box];
+  node000002c87860b800 -> node000002c87860b8f0;
+  node000002c87860b8f0 [label="i", shape=box];
+  node000002c87860b800 -> node000002c87860ba80;
+  node000002c87860ba80 [label="high", shape=box];
+  node000002c87860c560 -> node000002c87860c8d0;
+  node000002c87860c8d0 [label="Compound", shape=box];
+  node000002c87860c8d0 -> node000002c87860ba30;
+  node000002c87860ba30 [label="If", shape=box];
+  node000002c87860ba30 -> node000002c87860b990;
+  node000002c87860b990 [label="<", shape=box];
+  node000002c87860b990 -> node000002c87860b670;
+  node000002c87860b670 [label="a", shape=box];
+  node000002c87860b670 -> node000002c87860b5d0;
+  node000002c87860b5d0 [label="i", shape=box];
+  node000002c87860b990 -> node000002c87860b940;
+  node000002c87860b940 [label="x", shape=box];
+  node000002c87860ba30 -> node000002c87860b620;
+  node000002c87860b620 [label="Compound", shape=box];
+  node000002c87860b620 -> node000002c87860b9e0;
+  node000002c87860b9e0 [label="=", shape=box];
+  node000002c87860b9e0 -> node000002c87860bb70;
+  node000002c87860bb70 [label="x", shape=box];
+  node000002c87860b9e0 -> node000002c87860b530;
+  node000002c87860b530 [label="a", shape=box];
+  node000002c87860b530 -> node000002c87860bad0;
+  node000002c87860bad0 [label="i", shape=box];
+  { rank=same; node000002c87860b9e0; node000002c87860b8a0; }
+  node000002c87860b9e0 -> node000002c87860b8a0 [style=dashed];
+  node000002c87860b8a0 [label="=", shape=box];
+  node000002c87860b8a0 -> node000002c87860b4e0;
+  node000002c87860b4e0 [label="k", shape=box];
+  node000002c87860b8a0 -> node000002c87860b850;
+  node000002c87860b850 [label="i", shape=box];
+  { rank=same; node000002c87860ba30; node000002c87860c510; }
+  node000002c87860ba30 -> node000002c87860c510 [style=dashed];
+  node000002c87860c510 [label="=", shape=box];
+  node000002c87860c510 -> node000002c87860b6c0;
+  node000002c87860b6c0 [label="i", shape=box];
+  node000002c87860c510 -> node000002c87860bb20;
+  node000002c87860bb20 [label="+", shape=box];
+  node000002c87860bb20 -> node000002c87860b490;
+  node000002c87860b490 [label="i", shape=box];
+  node000002c87860bb20 -> node000002c87860b580;
+  node000002c87860b580 [label="1", shape=box];
+  { rank=same; node000002c87860c560; node000002c87860c0b0; }
+  node000002c87860c560 -> node000002c87860c0b0 [style=dashed];
+  node000002c87860c0b0 [label="Return", shape=box];
+  node000002c87860c0b0 -> node000002c87860ca10;
+  node000002c87860ca10 [label="k", shape=box];
+  { rank=same; node000002c87860c100; node000002c87860cfb0; }
+  node000002c87860c100 -> node000002c87860cfb0 [style=dashed];
+  node000002c87860cfb0 [label="func:sort", shape=box];
+  node000002c87860cfb0 -> node000002c87860c5b0;
+  node000002c87860c5b0 [label="param:a", shape=box];
+  { rank=same; node000002c87860c5b0; node000002c87860cf10; }
+  node000002c87860c5b0 -> node000002c87860cf10 [style=dashed];
+  node000002c87860cf10 [label="param:low", shape=box];
+  { rank=same; node000002c87860cf10; node000002c87860cb00; }
+  node000002c87860cf10 -> node000002c87860cb00 [style=dashed];
+  node000002c87860cb00 [label="param:high", shape=box];
+  node000002c87860cfb0 -> node000002c87860cf60;
+  node000002c87860cf60 [label="Compound", shape=box];
+  node000002c87860cf60 -> node000002c87860c380;
+  node000002c87860c380 [label="var:i", shape=box];
+  { rank=same; node000002c87860c380; node000002c87860c880; }
+  node000002c87860c380 -> node000002c87860c880 [style=dashed];
+  node000002c87860c880 [label="var:k", shape=box];
+  node000002c87860cf60 -> node000002c87860cba0;
+  node000002c87860cba0 [label="=", shape=box];
+  node000002c87860cba0 -> node000002c87860c600;
+  node000002c87860c600 [label="i", shape=box];
+  node000002c87860cba0 -> node000002c87860cb50;
+  node000002c87860cb50 [label="low", shape=box];
+  { rank=same; node000002c87860cba0; node000002c87860cec0; }
+  node000002c87860cba0 -> node000002c87860cec0 [style=dashed];
+  node000002c87860cec0 [label="While", shape=box];
+  node000002c87860cec0 -> node000002c87860c420;
+  node000002c87860c420 [label="<", shape=box];
+  node000002c87860c420 -> node000002c87860c650;
+  node000002c87860c650 [label="i", shape=box];
+  node000002c87860c420 -> node000002c87860c1f0;
+  node000002c87860c1f0 [label="-", shape=box];
+  node000002c87860c1f0 -> node000002c87860cbf0;
+  node000002c87860cbf0 [label="high", shape=box];
+  node000002c87860c1f0 -> node000002c87860c3d0;
+  node000002c87860c3d0 [label="1", shape=box];
+  node000002c87860cec0 -> node000002c87860c1a0;
+  node000002c87860c1a0 [label="Compound", shape=box];
+  node000002c87860c1a0 -> node000002c87860cd80;
+  node000002c87860cd80 [label="var:t", shape=box];
+  node000002c87860c1a0 -> node000002c87860c790;
+  node000002c87860c790 [label="=", shape=box];
+  node000002c87860c790 -> node000002c87860c920;
+  node000002c87860c920 [label="k", shape=box];
+  node000002c87860c790 -> node000002c87860c240;
+  node000002c87860c240 [label="call(minloc)", shape=box];
+  node000002c87860c240 -> node000002c87860c290;
+  node000002c87860c290 [label="a", shape=box];
+  { rank=same; node000002c87860c290; node000002c87860cd30; }
+  node000002c87860c290 -> node000002c87860cd30 [style=dashed];
+  node000002c87860cd30 [label="i", shape=box];
+  { rank=same; node000002c87860cd30; node000002c87860c2e0; }
+  node000002c87860cd30 -> node000002c87860c2e0 [style=dashed];
+  node000002c87860c2e0 [label="high", shape=box];
+  { rank=same; node000002c87860c790; node000002c87860c6a0; }
+  node000002c87860c790 -> node000002c87860c6a0 [style=dashed];
+  node000002c87860c6a0 [label="=", shape=box];
+  node000002c87860c6a0 -> node000002c87860c470;
+  node000002c87860c470 [label="t", shape=box];
+  node000002c87860c6a0 -> node000002c87860c150;
+  node000002c87860c150 [label="a", shape=box];
+  node000002c87860c150 -> node000002c87860c970;
+  node000002c87860c970 [label="k", shape=box];
+  { rank=same; node000002c87860c6a0; node000002c87860c7e0; }
+  node000002c87860c6a0 -> node000002c87860c7e0 [style=dashed];
+  node000002c87860c7e0 [label="=", shape=box];
+  node000002c87860c7e0 -> node000002c87860ca60;
+  node000002c87860ca60 [label="a", shape=box];
+  node000002c87860ca60 -> node000002c87860c6f0;
+  node000002c87860c6f0 [label="k", shape=box];
+  node000002c87860c7e0 -> node000002c87860cce0;
+  node000002c87860cce0 [label="a", shape=box];
+  node000002c87860cce0 -> node000002c87860c4c0;
+  node000002c87860c4c0 [label="i", shape=box];
+  { rank=same; node000002c87860c7e0; node000002c87860c9c0; }
+  node000002c87860c7e0 -> node000002c87860c9c0 [style=dashed];
+  node000002c87860c9c0 [label="=", shape=box];
+  node000002c87860c9c0 -> node000002c87860c740;
+  node000002c87860c740 [label="a", shape=box];
+  node000002c87860c740 -> node000002c87860ce70;
+  node000002c87860ce70 [label="i", shape=box];
+  node000002c87860c9c0 -> node000002c87860c830;
+  node000002c87860c830 [label="t", shape=box];
+  { rank=same; node000002c87860c9c0; node000002c87860cdd0; }
+  node000002c87860c9c0 -> node000002c87860cdd0 [style=dashed];
+  node000002c87860cdd0 [label="=", shape=box];
+  node000002c87860cdd0 -> node000002c87860cab0;
+  node000002c87860cab0 [label="i", shape=box];
+  node000002c87860cdd0 -> node000002c87860cc90;
+  node000002c87860cc90 [label="+", shape=box];
+  node000002c87860cc90 -> node000002c87860ce20;
+  node000002c87860ce20 [label="i", shape=box];
+  node000002c87860cc90 -> node000002c87860cc40;
+  node000002c87860cc40 [label="1", shape=box];
+  { rank=same; node000002c87860cfb0; node000002c878680bc0; }
+  node000002c87860cfb0 -> node000002c878680bc0 [style=dashed];
+  node000002c878680bc0 [label="func:main", shape=box];
+  node000002c878680bc0 -> node000002c878680a30;
+  node000002c878680a30 [label="Compound", shape=box];
+  node000002c878680a30 -> node000002c87860c060;
+  node000002c87860c060 [label="var:i", shape=box];
+  node000002c878680a30 -> node000002c878680e90;
+  node000002c878680e90 [label="=", shape=box];
+  node000002c878680e90 -> node000002c878680ad0;
+  node000002c878680ad0 [label="i", shape=box];
+  node000002c878680e90 -> node000002c878680990;
+  node000002c878680990 [label="0", shape=box];
+  { rank=same; node000002c878680e90; node000002c878680170; }
+  node000002c878680e90 -> node000002c878680170 [style=dashed];
+  node000002c878680170 [label="While", shape=box];
+  node000002c878680170 -> node000002c8786803a0;
+  node000002c8786803a0 [label="<", shape=box];
+  node000002c8786803a0 -> node000002c878680df0;
+  node000002c878680df0 [label="i", shape=box];
+  node000002c8786803a0 -> node000002c878681020;
+  node000002c878681020 [label="10", shape=box];
+  node000002c878680170 -> node000002c878680b20;
+  node000002c878680b20 [label="Compound", shape=box];
+  node000002c878680b20 -> node000002c8786800d0;
+  node000002c8786800d0 [label="=", shape=box];
+  node000002c8786800d0 -> node000002c878680620;
+  node000002c878680620 [label="vet", shape=box];
+  node000002c878680620 -> node000002c878680440;
+  node000002c878680440 [label="i", shape=box];
+  node000002c8786800d0 -> node000002c878680f30;
+  node000002c878680f30 [label="call(input)", shape=box];
+  { rank=same; node000002c8786800d0; node000002c878680a80; }
+  node000002c8786800d0 -> node000002c878680a80 [style=dashed];
+  node000002c878680a80 [label="=", shape=box];
+  node000002c878680a80 -> node000002c878680ee0;
+  node000002c878680ee0 [label="i", shape=box];
+  node000002c878680a80 -> node000002c878680670;
+  node000002c878680670 [label="+", shape=box];
+  node000002c878680670 -> node000002c8786805d0;
+  node000002c8786805d0 [label="i", shape=box];
+  node000002c878680670 -> node000002c878680210;
+  node000002c878680210 [label="1", shape=box];
+  { rank=same; node000002c878680170; node000002c878680c10; }
+  node000002c878680170 -> node000002c878680c10 [style=dashed];
+  node000002c878680c10 [label="call(sort)", shape=box];
+  node000002c878680c10 -> node000002c8786801c0;
+  node000002c8786801c0 [label="vet", shape=box];
+  { rank=same; node000002c8786801c0; node000002c878680120; }
+  node000002c8786801c0 -> node000002c878680120 [style=dashed];
+  node000002c878680120 [label="0", shape=box];
+  { rank=same; node000002c878680120; node000002c878680940; }
+  node000002c878680120 -> node000002c878680940 [style=dashed];
+  node000002c878680940 [label="10", shape=box];
+  { rank=same; node000002c878680c10; node000002c8786808f0; }
+  node000002c878680c10 -> node000002c8786808f0 [style=dashed];
+  node000002c8786808f0 [label="=", shape=box];
+  node000002c8786808f0 -> node000002c878680300;
+  node000002c878680300 [label="i", shape=box];
+  node000002c8786808f0 -> node000002c878680760;
+  node000002c878680760 [label="0", shape=box];
+  { rank=same; node000002c8786808f0; node000002c878680490; }
+  node000002c8786808f0 -> node000002c878680490 [style=dashed];
+  node000002c878680490 [label="While", shape=box];
+  node000002c878680490 -> node000002c878680fd0;
+  node000002c878680fd0 [label="<", shape=box];
+  node000002c878680fd0 -> node000002c8786802b0;
+  node000002c8786802b0 [label="i", shape=box];
+  node000002c878680fd0 -> node000002c878680f80;
+  node000002c878680f80 [label="10", shape=box];
+  node000002c878680490 -> node000002c878680d00;
+  node000002c878680d00 [label="Compound", shape=box];
+  node000002c878680d00 -> node000002c878680b70;
+  node000002c878680b70 [label="call(output)", shape=box];
+  node000002c878680b70 -> node000002c878680cb0;
+  node000002c878680cb0 [label="vet", shape=box];
+  node000002c878680cb0 -> node000002c878680350;
+  node000002c878680350 [label="i", shape=box];
+  { rank=same; node000002c878680b70; node000002c878680580; }
+  node000002c878680b70 -> node000002c878680580 [style=dashed];
+  node000002c878680580 [label="=", shape=box];
+  node000002c878680580 -> node000002c8786809e0;
+  node000002c8786809e0 [label="i", shape=box];
+  node000002c878680580 -> node000002c8786806c0;
+  node000002c8786806c0 [label="+", shape=box];
+  node000002c8786806c0 -> node000002c8786808a0;
+  node000002c8786808a0 [label="i", shape=box];
+  node000002c8786806c0 -> node000002c8786803f0;
+  node000002c8786803f0 [label="1", shape=box];
+}
+
+=== CODIGO QUADRUPLAS ===
+
+(FUN, int, minloc, -)
+(ASSIGN, low, -, k)
+(LOAD, a, low, t1)
+(ASSIGN, t1, -, x)
+(ASSIGN, 1, -, t2)
+(ADD, low, t2, t3)
+(ASSIGN, t3, -, i)
+(LAB, L1, -, -)
+(LT, i, high, t4)
+(IFF, t4, L2, -)
+(LOAD, a, i, t5)
+(LT, t5, x, t6)
+(IFF, t6, L3, -)
+(LOAD, a, i, t7)
+(ASSIGN, t7, -, x)
+(ASSIGN, i, -, k)
+(LAB, L3, -, -)
+(ASSIGN, 1, -, t8)
+(ADD, i, t8, t9)
+(ASSIGN, t9, -, i)
+(GOTO, L1, -, -)
+(LAB, L2, -, -)
+(RET, k, -, -)
+(END, minloc, -, -)
+(FUN, void, sort, -)
+(ASSIGN, low, -, i)
+(LAB, L5, -, -)
+(ASSIGN, 1, -, t10)
+(SUB, high, t10, t11)
+(LT, i, t11, t12)
+(IFF, t12, L6, -)
+(PARAM, a, -, -)
+(PARAM, i, -, -)
+(PARAM, high, -, -)
+(CALL, minloc, 3, t13)
+(ASSIGN, t13, -, k)
+(LOAD, a, k, t14)
+(ASSIGN, t14, -, t)
+(LOAD, a, i, t15)
+(STORE, t15, k, a)
+(STORE, t, i, a)
+(ASSIGN, 1, -, t16)
+(ADD, i, t16, t17)
+(ASSIGN, t17, -, i)
+(GOTO, L5, -, -)
+(LAB, L6, -, -)
+(END, sort, -, -)
+(FUN, void, main, -)
+(ASSIGN, 0, -, t18)
+(ASSIGN, t18, -, i)
+(LAB, L7, -, -)
+(ASSIGN, 10, -, t19)
+(LT, i, t19, t20)
+(IFF, t20, L8, -)
+(CALL, input, 0, t21)
+(STORE, t21, i, vet)
+(ASSIGN, 1, -, t22)
+(ADD, i, t22, t23)
+(ASSIGN, t23, -, i)
+(GOTO, L7, -, -)
+(LAB, L8, -, -)
+(PARAM, vet, -, -)
+(ASSIGN, 0, -, t24)
+(PARAM, t24, -, -)
+(ASSIGN, 10, -, t25)
+(PARAM, t25, -, -)
+(CALL, sort, 3, t26)
+(ASSIGN, 0, -, t27)
+(ASSIGN, t27, -, i)
+(LAB, L9, -, -)
+(ASSIGN, 10, -, t28)
+(LT, i, t28, t29)
+(IFF, t29, L10, -)
+(LOAD, vet, i, t30)
+(PARAM, t30, -, -)
+(CALL, output, 1, -)
+(ASSIGN, 1, -, t31)
+(ADD, i, t31, t32)
+(ASSIGN, t32, -, i)
+(GOTO, L9, -, -)
+(LAB, L10, -, -)
+(END, main, -, -)
+
+=== TABELA DE SIMBOLOS ===
+#    Nome           Escopo         TipoID  TipoDado  Loc   Linhas
+---  -------------  -------------  ------  --------  ----  ------
+0    low            sort           var     int       1        21 
+1    low            minloc         var     int       1         6 
+2    main           global         fun     void      0        34 
+3    sort           global         fun     void      0        21 
+4    input          global         fun     int       0         0 
+5    vet            global         vet     int       0         4 
+6    minloc         global         fun     int       0         6 
+7    a              sort           vet     int       0        21 
+8    a              minloc         vet     int       0         6 
+9    i              main_B1        var     int       0        36 
+10   i              sort_B1        var     int       3        22 
+11   i              minloc_B1      var     int       3         7 
+12   k              sort_B1        var     int       4        22 
+13   k              minloc_B1      var     int       5         7 
+14   t              sort_B1_B2     var     int       5        25 
+15   output         global         fun     void      0         0 
+16   x              minloc_B1      var     int       4         7 
+17   high           sort           var     int       2        21 
+18   high           minloc         var     int       2         6 
