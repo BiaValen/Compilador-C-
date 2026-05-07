@@ -26,7 +26,6 @@ static void emitQuad(char * op, char * arg1, char * arg2, char * result) {
     codigoIntermediario[totalQuadruplas].result = result ? strdup(result) : strdup("-");
     totalQuadruplas++;
 
-    /* Continua imprimindo na tela para debug */
     printf("(%s, %s, %s, %s)\n",
         op     ? op     : "-",
         arg1   ? arg1   : "-",
