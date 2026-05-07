@@ -9,6 +9,8 @@
 /* Número máximo de filhos por nó */
 #define MAXCHILDREN 3
 
+char * copyString(char * s);
+
 /* Tipos de nós da árvore sintática */
 typedef enum {StmtK, ExpK, DeclK} NodeKind;
 

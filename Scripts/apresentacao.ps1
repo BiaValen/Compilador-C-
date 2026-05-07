@@ -43,7 +43,7 @@ foreach ($linha in $saida) {
         $mostrar = $false
     }
     # Quando chegar nas Quádruplas, voltamos a mostrar na tela
-    if ($linha -match "=== CODIGO QUADRUPLAS") {
+    if ($linha -match "=== CODIGO INTERMEDIARIO") {
         $mostrar = $true
     }
     # Imprime a linha no terminal se estiver permitido
