@@ -76,6 +76,7 @@
     #include "util.h"
     #include "codegen.h"
     #include "tabelaSimbolos.h"
+    #include "asmgen.h"
 
     /* Variáveis para controlar o escopo atual */
     char * escopo = "global"; 
@@ -105,7 +106,7 @@
         return s;
     }
 
-#line 109 "sintax.tab.c"
+#line 110 "sintax.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -586,13 +587,13 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   109,   109,   113,   114,   118,   119,   123,   130,   141,
-     149,   150,   155,   154,   178,   179,   183,   185,   190,   197,
-     208,   207,   230,   231,   235,   236,   240,   241,   242,   243,
-     244,   248,   249,   250,   258,   264,   274,   283,   284,   292,
-     299,   303,   309,   319,   326,   330,   331,   332,   333,   334,
-     335,   339,   346,   350,   351,   355,   362,   366,   367,   371,
-     372,   373,   374,   382,   392,   393,   397,   399,   405
+       0,   110,   110,   114,   115,   119,   120,   124,   131,   142,
+     150,   151,   156,   155,   179,   180,   184,   186,   191,   198,
+     209,   208,   231,   232,   236,   237,   241,   242,   243,   244,
+     245,   249,   250,   251,   259,   265,   275,   284,   285,   293,
+     300,   304,   310,   320,   327,   331,   332,   333,   334,   335,
+     336,   340,   347,   351,   352,   356,   363,   367,   368,   372,
+     373,   374,   375,   383,   393,   394,   398,   400,   406
 };
 #endif
 
@@ -1504,48 +1505,48 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: declaration_list  */
-#line 109 "sintax.y"
+#line 110 "sintax.y"
                              { savedTree = (yyvsp[0].node); }
-#line 1510 "sintax.tab.c"
+#line 1511 "sintax.tab.c"
     break;
 
   case 3: /* declaration_list: declaration_list declaration  */
-#line 113 "sintax.y"
+#line 114 "sintax.y"
                                         { (yyval.node) = addSibling((yyvsp[-1].node), (yyvsp[0].node)); }
-#line 1516 "sintax.tab.c"
+#line 1517 "sintax.tab.c"
     break;
 
   case 4: /* declaration_list: declaration  */
-#line 114 "sintax.y"
+#line 115 "sintax.y"
                          { (yyval.node) = (yyvsp[0].node); }
-#line 1522 "sintax.tab.c"
+#line 1523 "sintax.tab.c"
     break;
 
   case 5: /* declaration: var_declaration  */
-#line 118 "sintax.y"
+#line 119 "sintax.y"
                              { (yyval.node) = (yyvsp[0].node); }
-#line 1528 "sintax.tab.c"
+#line 1529 "sintax.tab.c"
     break;
 
   case 6: /* declaration: fun_declaration  */
-#line 119 "sintax.y"
+#line 120 "sintax.y"
                              { (yyval.node) = (yyvsp[0].node); }
-#line 1534 "sintax.tab.c"
+#line 1535 "sintax.tab.c"
     break;
 
   case 7: /* var_declaration: type_specifier ID ";"  */
-#line 124 "sintax.y"
+#line 125 "sintax.y"
         { 
             (yyval.node) = newDecNode(VarK);
             (yyval.node)->type = ((yyvsp[-2].op) == INT) ? Integer : Void;
             (yyval.node)->attr.name = copyString((yyvsp[-1].string));
             insere_ts((yyvsp[-1].string), linha_atual, localizacao++, escopo, "var", idTipo); 
         }
-#line 1545 "sintax.tab.c"
+#line 1546 "sintax.tab.c"
     break;
 
   case 8: /* var_declaration: type_specifier ID "[" NUM "]" ";"  */
-#line 131 "sintax.y"
+#line 132 "sintax.y"
     {
         (yyval.node) = newDecNode(VarK);
         (yyval.node)->type = ((yyvsp[-5].op) == INT) ? Integer : Void;
@@ -1556,32 +1557,32 @@ yyreduce:
         insere_ts((yyvsp[-4].string), linha_atual, localizacao++, escopo, "vet", idTipo);
         localizacao += (yyvsp[-2].val) - 1;
     }
-#line 1560 "sintax.tab.c"
+#line 1561 "sintax.tab.c"
     break;
 
   case 9: /* var_declaration: error ";"  */
-#line 142 "sintax.y"
+#line 143 "sintax.y"
     {
         yyerrok;
         (yyval.node) = NULL;
     }
-#line 1569 "sintax.tab.c"
+#line 1570 "sintax.tab.c"
     break;
 
   case 10: /* type_specifier: "int"  */
-#line 149 "sintax.y"
+#line 150 "sintax.y"
             { idTipo = "int"; (yyval.op) = INT; }
-#line 1575 "sintax.tab.c"
+#line 1576 "sintax.tab.c"
     break;
 
   case 11: /* type_specifier: "void"  */
-#line 150 "sintax.y"
+#line 151 "sintax.y"
                { idTipo = "void"; (yyval.op) = VOID; }
-#line 1581 "sintax.tab.c"
+#line 1582 "sintax.tab.c"
     break;
 
   case 12: /* $@1: %empty  */
-#line 155 "sintax.y"
+#line 156 "sintax.y"
         { 
          /* Insere a função no escopo GLOBAL antes de entrar nela */
          insere_ts((yyvsp[0].string), linha_atual, 0, "global", "fun", idTipo);
@@ -1593,11 +1594,11 @@ yyreduce:
          localizacao = 0; 
          ContadorBloco = 1;
         }
-#line 1597 "sintax.tab.c"
+#line 1598 "sintax.tab.c"
     break;
 
   case 13: /* fun_declaration: type_specifier ID $@1 "(" params ")" compound_stmt  */
-#line 167 "sintax.y"
+#line 168 "sintax.y"
         {
             (yyval.node) = newDecNode(FunK);
             (yyval.node)->type = ((yyvsp[-6].op) == INT) ? Integer : Void;
@@ -1606,57 +1607,57 @@ yyreduce:
             (yyval.node)->child[1] = (yyvsp[0].node); /* Corpo da função */
             escopo = "global";
         }
-#line 1610 "sintax.tab.c"
+#line 1611 "sintax.tab.c"
     break;
 
   case 14: /* params: param_list  */
-#line 178 "sintax.y"
+#line 179 "sintax.y"
                    { (yyval.node) = (yyvsp[0].node); }
-#line 1616 "sintax.tab.c"
+#line 1617 "sintax.tab.c"
     break;
 
   case 15: /* params: "void"  */
-#line 179 "sintax.y"
+#line 180 "sintax.y"
                { (yyval.node) = NULL; }
-#line 1622 "sintax.tab.c"
+#line 1623 "sintax.tab.c"
     break;
 
   case 16: /* param_list: param_list "," param  */
-#line 184 "sintax.y"
+#line 185 "sintax.y"
         { (yyval.node) = addSibling((yyvsp[-2].node), (yyvsp[0].node)); }
-#line 1628 "sintax.tab.c"
+#line 1629 "sintax.tab.c"
     break;
 
   case 17: /* param_list: param  */
-#line 186 "sintax.y"
+#line 187 "sintax.y"
         { (yyval.node) = (yyvsp[0].node); }
-#line 1634 "sintax.tab.c"
+#line 1635 "sintax.tab.c"
     break;
 
   case 18: /* param: type_specifier ID  */
-#line 191 "sintax.y"
+#line 192 "sintax.y"
         { 
             (yyval.node) = newDecNode(ParamK);
             (yyval.node)->type = ((yyvsp[-1].op) == INT) ? Integer : Void;
             (yyval.node)->attr.name = copyString((yyvsp[0].string));
             insere_ts((yyvsp[0].string), linha_atual, localizacao++, escopo, "var", idTipo); 
         }
-#line 1645 "sintax.tab.c"
+#line 1646 "sintax.tab.c"
     break;
 
   case 19: /* param: type_specifier ID "[" "]"  */
-#line 198 "sintax.y"
+#line 199 "sintax.y"
         { 
             (yyval.node) = newDecNode(ParamK);
             (yyval.node)->type = ((yyvsp[-3].op) == INT) ? Integer : Void;
             (yyval.node)->attr.name = copyString((yyvsp[-2].string));
             insere_ts((yyvsp[-2].string), linha_atual, localizacao++, escopo, "vet", idTipo); 
         }
-#line 1656 "sintax.tab.c"
+#line 1657 "sintax.tab.c"
     break;
 
   case 20: /* $@2: %empty  */
-#line 208 "sintax.y"
+#line 209 "sintax.y"
     {
         /* Salva escopo atual */
         strcpy(escopoAnterior, escopo);
@@ -1667,11 +1668,11 @@ yyreduce:
         sprintf(buffer, "%s_B%d", escopo, ContadorBloco++);
         escopo = strdup(buffer);
     }
-#line 1671 "sintax.tab.c"
+#line 1672 "sintax.tab.c"
     break;
 
   case 21: /* compound_stmt: "{" $@2 local_declarations statement_list "}"  */
-#line 219 "sintax.y"
+#line 220 "sintax.y"
     {
         (yyval.node) = newStmtNode(CompoundK);
         (yyval.node)->child[0] = (yyvsp[-2].node);
@@ -1680,349 +1681,349 @@ yyreduce:
         /* Restaura escopo */
         escopo = strdup(escopoAnterior);
     }
-#line 1684 "sintax.tab.c"
+#line 1685 "sintax.tab.c"
     break;
 
   case 22: /* local_declarations: local_declarations var_declaration  */
-#line 230 "sintax.y"
+#line 231 "sintax.y"
                                                { (yyval.node) = addSibling((yyvsp[-1].node), (yyvsp[0].node)); }
-#line 1690 "sintax.tab.c"
+#line 1691 "sintax.tab.c"
     break;
 
   case 23: /* local_declarations: empty  */
-#line 231 "sintax.y"
+#line 232 "sintax.y"
                     { (yyval.node) = NULL; }
-#line 1696 "sintax.tab.c"
+#line 1697 "sintax.tab.c"
     break;
 
   case 24: /* statement_list: statement_list statement  */
-#line 235 "sintax.y"
+#line 236 "sintax.y"
                                      { (yyval.node) = addSibling((yyvsp[-1].node), (yyvsp[0].node)); }
-#line 1702 "sintax.tab.c"
+#line 1703 "sintax.tab.c"
     break;
 
   case 25: /* statement_list: empty  */
-#line 236 "sintax.y"
+#line 237 "sintax.y"
                     { (yyval.node) = NULL; }
-#line 1708 "sintax.tab.c"
+#line 1709 "sintax.tab.c"
     break;
 
   case 26: /* statement: expression_stmt  */
-#line 240 "sintax.y"
+#line 241 "sintax.y"
                         { (yyval.node) = (yyvsp[0].node); }
-#line 1714 "sintax.tab.c"
+#line 1715 "sintax.tab.c"
     break;
 
   case 27: /* statement: compound_stmt  */
-#line 241 "sintax.y"
+#line 242 "sintax.y"
                         { (yyval.node) = (yyvsp[0].node); }
-#line 1720 "sintax.tab.c"
+#line 1721 "sintax.tab.c"
     break;
 
   case 28: /* statement: selection_stmt  */
-#line 242 "sintax.y"
+#line 243 "sintax.y"
                          { (yyval.node) = (yyvsp[0].node); }
-#line 1726 "sintax.tab.c"
+#line 1727 "sintax.tab.c"
     break;
 
   case 29: /* statement: iteration_stmt  */
-#line 243 "sintax.y"
+#line 244 "sintax.y"
                          { (yyval.node) = (yyvsp[0].node); }
-#line 1732 "sintax.tab.c"
+#line 1733 "sintax.tab.c"
     break;
 
   case 30: /* statement: return_stmt  */
-#line 244 "sintax.y"
+#line 245 "sintax.y"
                       { (yyval.node) = (yyvsp[0].node); }
-#line 1738 "sintax.tab.c"
+#line 1739 "sintax.tab.c"
     break;
 
   case 31: /* expression_stmt: expression ";"  */
-#line 248 "sintax.y"
+#line 249 "sintax.y"
                            { (yyval.node) = (yyvsp[-1].node); }
-#line 1744 "sintax.tab.c"
+#line 1745 "sintax.tab.c"
     break;
 
   case 32: /* expression_stmt: ";"  */
-#line 249 "sintax.y"
+#line 250 "sintax.y"
                  { (yyval.node) = NULL; }
-#line 1750 "sintax.tab.c"
+#line 1751 "sintax.tab.c"
     break;
 
   case 33: /* expression_stmt: error ";"  */
-#line 251 "sintax.y"
+#line 252 "sintax.y"
         {
             yyerrok;
             (yyval.node) = NULL;
         }
-#line 1759 "sintax.tab.c"
+#line 1760 "sintax.tab.c"
     break;
 
   case 34: /* selection_stmt: "if" "(" expression ")" statement  */
-#line 259 "sintax.y"
+#line 260 "sintax.y"
         {
         (yyval.node) = newStmtNode(IfK);
         (yyval.node)->child[0] = (yyvsp[-2].node); /* Condição */
         (yyval.node)->child[1] = (yyvsp[0].node); /* Then */
         }
-#line 1769 "sintax.tab.c"
+#line 1770 "sintax.tab.c"
     break;
 
   case 35: /* selection_stmt: "if" "(" expression ")" statement "else" statement  */
-#line 265 "sintax.y"
+#line 266 "sintax.y"
         {
         (yyval.node) = newStmtNode(IfK);
         (yyval.node)->child[0] = (yyvsp[-4].node); /* Condição */
         (yyval.node)->child[1] = (yyvsp[-2].node); /* Then */
         (yyval.node)->child[2] = (yyvsp[0].node); /* Else */
         }
-#line 1780 "sintax.tab.c"
+#line 1781 "sintax.tab.c"
     break;
 
   case 36: /* iteration_stmt: "while" "(" expression ")" statement  */
-#line 275 "sintax.y"
+#line 276 "sintax.y"
         {
         (yyval.node) = newStmtNode(WhileK);
         (yyval.node)->child[0] = (yyvsp[-2].node); /* Condição */
         (yyval.node)->child[1] = (yyvsp[0].node); /* Corpo */
         }
-#line 1790 "sintax.tab.c"
+#line 1791 "sintax.tab.c"
     break;
 
   case 37: /* return_stmt: "return" ";"  */
-#line 283 "sintax.y"
+#line 284 "sintax.y"
                             { (yyval.node) = newStmtNode(ReturnK); }
-#line 1796 "sintax.tab.c"
+#line 1797 "sintax.tab.c"
     break;
 
   case 38: /* return_stmt: "return" expression ";"  */
-#line 285 "sintax.y"
+#line 286 "sintax.y"
         {
         (yyval.node) = newStmtNode(ReturnK);
         (yyval.node)->child[0] = (yyvsp[-1].node); /* Valor retornado */
         }
-#line 1805 "sintax.tab.c"
+#line 1806 "sintax.tab.c"
     break;
 
   case 39: /* expression: var "=" expression  */
-#line 293 "sintax.y"
+#line 294 "sintax.y"
         {
         (yyval.node) = newExpNode(OpK);
         (yyval.node)->attr.op = ATRIB;
         (yyval.node)->child[0] = (yyvsp[-2].node); /* Variável */
         (yyval.node)->child[1] = (yyvsp[0].node); /* Valor */
         }
-#line 1816 "sintax.tab.c"
+#line 1817 "sintax.tab.c"
     break;
 
   case 40: /* expression: simple_expression  */
-#line 299 "sintax.y"
+#line 300 "sintax.y"
                                 { (yyval.node) = (yyvsp[0].node); }
-#line 1822 "sintax.tab.c"
+#line 1823 "sintax.tab.c"
     break;
 
   case 41: /* var: ID  */
-#line 304 "sintax.y"
+#line 305 "sintax.y"
         { 
             (yyval.node) = newExpNode(IdK);
             (yyval.node)->attr.name = copyString((yyvsp[0].string));
             verifica_declarada((yyvsp[0].string), escopo, linha_atual);
         }
-#line 1832 "sintax.tab.c"
+#line 1833 "sintax.tab.c"
     break;
 
   case 42: /* var: ID "[" expression "]"  */
-#line 310 "sintax.y"
+#line 311 "sintax.y"
         {
             (yyval.node) = newExpNode(IdK);
             (yyval.node)->attr.name = copyString((yyvsp[-3].string));
             (yyval.node)->child[0] = (yyvsp[-1].node); /* Indice do vetor */
             verifica_declarada((yyvsp[-3].string), escopo, linha_atual);
         }
-#line 1843 "sintax.tab.c"
+#line 1844 "sintax.tab.c"
     break;
 
   case 43: /* simple_expression: additive_expression relop additive_expression  */
-#line 320 "sintax.y"
+#line 321 "sintax.y"
         {
         (yyval.node) = newExpNode(OpK);
         (yyval.node)->attr.op = (yyvsp[-1].op);
         (yyval.node)->child[0] = (yyvsp[-2].node);
         (yyval.node)->child[1] = (yyvsp[0].node);
         }
-#line 1854 "sintax.tab.c"
+#line 1855 "sintax.tab.c"
     break;
 
   case 44: /* simple_expression: additive_expression  */
-#line 326 "sintax.y"
+#line 327 "sintax.y"
                                  { (yyval.node) = (yyvsp[0].node); }
-#line 1860 "sintax.tab.c"
+#line 1861 "sintax.tab.c"
     break;
 
   case 45: /* relop: "<="  */
-#line 330 "sintax.y"
+#line 331 "sintax.y"
                 { (yyval.op) = MENORIG; }
-#line 1866 "sintax.tab.c"
+#line 1867 "sintax.tab.c"
     break;
 
   case 46: /* relop: "<"  */
-#line 331 "sintax.y"
+#line 332 "sintax.y"
                 { (yyval.op) = MENOR; }
-#line 1872 "sintax.tab.c"
+#line 1873 "sintax.tab.c"
     break;
 
   case 47: /* relop: ">"  */
-#line 332 "sintax.y"
+#line 333 "sintax.y"
                 { (yyval.op) = MAIOR; }
-#line 1878 "sintax.tab.c"
+#line 1879 "sintax.tab.c"
     break;
 
   case 48: /* relop: ">="  */
-#line 333 "sintax.y"
+#line 334 "sintax.y"
                   { (yyval.op) = MAIORIG; }
-#line 1884 "sintax.tab.c"
+#line 1885 "sintax.tab.c"
     break;
 
   case 49: /* relop: "=="  */
-#line 334 "sintax.y"
+#line 335 "sintax.y"
                  { (yyval.op) = IGUALD; }
-#line 1890 "sintax.tab.c"
+#line 1891 "sintax.tab.c"
     break;
 
   case 50: /* relop: "!="  */
-#line 335 "sintax.y"
+#line 336 "sintax.y"
                { (yyval.op) = DIFF; }
-#line 1896 "sintax.tab.c"
+#line 1897 "sintax.tab.c"
     break;
 
   case 51: /* additive_expression: additive_expression addop term  */
-#line 340 "sintax.y"
+#line 341 "sintax.y"
         {
         (yyval.node) = newExpNode(OpK);
         (yyval.node)->attr.op = (yyvsp[-1].op);
         (yyval.node)->child[0] = (yyvsp[-2].node);
         (yyval.node)->child[1] = (yyvsp[0].node);
         }
-#line 1907 "sintax.tab.c"
+#line 1908 "sintax.tab.c"
     break;
 
   case 52: /* additive_expression: term  */
-#line 346 "sintax.y"
+#line 347 "sintax.y"
                 { (yyval.node) = (yyvsp[0].node); }
-#line 1913 "sintax.tab.c"
+#line 1914 "sintax.tab.c"
     break;
 
   case 53: /* addop: "+"  */
-#line 350 "sintax.y"
+#line 351 "sintax.y"
              { (yyval.op) = MAIS; }
-#line 1919 "sintax.tab.c"
+#line 1920 "sintax.tab.c"
     break;
 
   case 54: /* addop: "-"  */
-#line 351 "sintax.y"
+#line 352 "sintax.y"
               { (yyval.op) = SUB; }
-#line 1925 "sintax.tab.c"
+#line 1926 "sintax.tab.c"
     break;
 
   case 55: /* term: term mulop factor  */
-#line 356 "sintax.y"
+#line 357 "sintax.y"
         {
             (yyval.node) = newExpNode(OpK);
             (yyval.node)->attr.op = (yyvsp[-1].op);
             (yyval.node)->child[0] = (yyvsp[-2].node);
             (yyval.node)->child[1] = (yyvsp[0].node);
         }
-#line 1936 "sintax.tab.c"
+#line 1937 "sintax.tab.c"
     break;
 
   case 56: /* term: factor  */
-#line 362 "sintax.y"
+#line 363 "sintax.y"
                  { (yyval.node) = (yyvsp[0].node); }
-#line 1942 "sintax.tab.c"
+#line 1943 "sintax.tab.c"
     break;
 
   case 57: /* mulop: "*"  */
-#line 366 "sintax.y"
+#line 367 "sintax.y"
              { (yyval.op) = MULT; }
-#line 1948 "sintax.tab.c"
+#line 1949 "sintax.tab.c"
     break;
 
   case 58: /* mulop: "/"  */
-#line 367 "sintax.y"
+#line 368 "sintax.y"
               { (yyval.op) = DIV; }
-#line 1954 "sintax.tab.c"
+#line 1955 "sintax.tab.c"
     break;
 
   case 59: /* factor: "(" expression ")"  */
-#line 371 "sintax.y"
+#line 372 "sintax.y"
                              { (yyval.node) = (yyvsp[-1].node); }
-#line 1960 "sintax.tab.c"
+#line 1961 "sintax.tab.c"
     break;
 
   case 60: /* factor: var  */
-#line 372 "sintax.y"
+#line 373 "sintax.y"
               { (yyval.node) = (yyvsp[0].node); }
-#line 1966 "sintax.tab.c"
+#line 1967 "sintax.tab.c"
     break;
 
   case 61: /* factor: call  */
-#line 373 "sintax.y"
+#line 374 "sintax.y"
                { (yyval.node) = (yyvsp[0].node); }
-#line 1972 "sintax.tab.c"
+#line 1973 "sintax.tab.c"
     break;
 
   case 62: /* factor: NUM  */
-#line 375 "sintax.y"
+#line 376 "sintax.y"
         {
             (yyval.node) = newExpNode(ConstK);
             (yyval.node)->attr.val = (yyvsp[0].val);
         }
-#line 1981 "sintax.tab.c"
+#line 1982 "sintax.tab.c"
     break;
 
   case 63: /* call: ID "(" args ")"  */
-#line 383 "sintax.y"
+#line 384 "sintax.y"
         {
             (yyval.node) = newExpNode(CallK);
             (yyval.node)->attr.name = copyString((yyvsp[-3].string));
             (yyval.node)->child[0] = (yyvsp[-1].node); /* Argumentos */
             verifica_funcao_declarada((yyvsp[-3].string), escopo, linha_atual);
         }
-#line 1992 "sintax.tab.c"
+#line 1993 "sintax.tab.c"
     break;
 
   case 64: /* args: arg_list  */
-#line 392 "sintax.y"
+#line 393 "sintax.y"
                  { (yyval.node) = (yyvsp[0].node); }
-#line 1998 "sintax.tab.c"
+#line 1999 "sintax.tab.c"
     break;
 
   case 65: /* args: empty  */
-#line 393 "sintax.y"
+#line 394 "sintax.y"
                 { (yyval.node) = NULL; }
-#line 2004 "sintax.tab.c"
+#line 2005 "sintax.tab.c"
     break;
 
   case 66: /* arg_list: arg_list "," expression  */
-#line 398 "sintax.y"
+#line 399 "sintax.y"
         { (yyval.node) = addSibling((yyvsp[-2].node), (yyvsp[0].node)); }
-#line 2010 "sintax.tab.c"
+#line 2011 "sintax.tab.c"
     break;
 
   case 67: /* arg_list: expression  */
-#line 400 "sintax.y"
+#line 401 "sintax.y"
         { (yyval.node) = (yyvsp[0].node); }
-#line 2016 "sintax.tab.c"
+#line 2017 "sintax.tab.c"
     break;
 
   case 68: /* empty: %empty  */
-#line 405 "sintax.y"
+#line 406 "sintax.y"
         { (yyval.node) = NULL; }
-#line 2022 "sintax.tab.c"
+#line 2023 "sintax.tab.c"
     break;
 
 
-#line 2026 "sintax.tab.c"
+#line 2027 "sintax.tab.c"
 
       default: break;
     }
@@ -2246,7 +2247,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 408 "sintax.y"
+#line 409 "sintax.y"
 
 
 /* Função de Erro */
@@ -2300,7 +2301,10 @@ int main(int argc, char *argv[]) {
     printf("\n=== TABELA DE SIMBOLOS ===\n");
     print_ts(stdout); 
 
+    asmGen("saida.asm");
+    
     liberaTabela();
+    
     
     return 0;
 }

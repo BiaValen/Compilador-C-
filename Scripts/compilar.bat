@@ -19,7 +19,7 @@ echo [2/3] Gerando o Analisador Lexico (Flex)...
 flex lexer.l
 
 echo [3/3] Compilando o codigo fonte (GCC)...
-gcc sintax.tab.c lex.yy.c tabelaSimbolos.c codegen.c util.c -o "%ROOT_DIR%\compilador.exe"
+gcc sintax.tab.c lex.yy.c tabelaSimbolos.c codegen.c util.c asmgen.c -o "%ROOT_DIR%\compilador.exe"
 
 cd /d "%ROOT_DIR%"
 

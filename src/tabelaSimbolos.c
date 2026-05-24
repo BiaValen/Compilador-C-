@@ -305,3 +305,48 @@ int verifica_num_parametros(char* funcName, int esperado, int recebido, int linh
     }
     return 1;
 }
+
+/* ========== FUNÇÕES PARA O ASMGEN ========== */
+
+/* Retorna quantos parâmetros a função tem
+ * Parâmetros são entradas com scope == funcName e tipoID == "var" ou "vet"
+ * que NÃO são variáveis locais — identificamos pelo memloc < nLocais
+ * Mas como não temos essa info diretamente, contamos TODAS as var/vet
+ * do escopo direto da função (não dos sub-blocos _B1, _B2...)
+ */
+int getNumParams(char * funcName) {
+    int count = 0;
+    int i;
+    for (i = 0; i < SIZE; i++) {
+        Tabela l = hashTable[i];
+        while (l != NULL) {
+            //printf("DEBUG getNumParams: name=%s scope=%s tipoID=%s\n",
+             //      l->name, l->scope, l->tipoID);
+            if (strcmp(l->scope, funcName) == 0 &&
+                (strcmp(l->tipoID, "var") == 0 || strcmp(l->tipoID, "vet") == 0)) {
+                count++;
+            }
+            l = l->next;
+        }
+    }
+    //printf("DEBUG getNumParams(%s) = %d\n", funcName, count);
+    return count;
+}
+
+/* Retorna o nome do parâmetro na posição index (0-based, por memloc) */
+char * getParamName(char * funcName, int index) {
+    int i;
+    /* Procura a entrada com scope == funcName e memloc == index */
+    for (i = 0; i < SIZE; i++) {
+        Tabela l = hashTable[i];
+        while (l != NULL) {
+            if (strcmp(l->scope, funcName) == 0 &&
+                (strcmp(l->tipoID, "var") == 0 || strcmp(l->tipoID, "vet") == 0) &&
+                l->memloc == index) {
+                return l->name;
+            }
+            l = l->next;
+        }
+    }
+    return NULL;
+}

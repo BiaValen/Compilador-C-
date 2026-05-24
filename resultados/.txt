@@ -2,82 +2,82 @@
 === ARVORE SINTATICA ===
 digraph AST {
   node [fontname="Arial"];
-  node000001a554e7ae90 [label="func:gcd", shape=box];
-  node000001a554e7ae90 -> node000001a554e7a170;
-  node000001a554e7a170 [label="param:u", shape=box];
-  { rank=same; node000001a554e7a170; node000001a554e7a870; }
-  node000001a554e7a170 -> node000001a554e7a870 [style=dashed];
-  node000001a554e7a870 [label="param:v", shape=box];
-  node000001a554e7ae90 -> node000001a554e7b480;
-  node000001a554e7b480 [label="Compound", shape=box];
-  node000001a554e7b480 -> node000001a554e7b2f0;
-  node000001a554e7b2f0 [label="If", shape=box];
-  node000001a554e7b2f0 -> node000001a554e7a9c0;
-  node000001a554e7a9c0 [label="==", shape=box];
-  node000001a554e7a9c0 -> node000001a554e7a920;
-  node000001a554e7a920 [label="v", shape=box];
-  node000001a554e7a9c0 -> node000001a554e7a970;
-  node000001a554e7a970 [label="0", shape=box];
-  node000001a554e7b2f0 -> node000001a554e7aad0;
-  node000001a554e7aad0 [label="Compound", shape=box];
-  node000001a554e7aad0 -> node000001a554e7aa80;
-  node000001a554e7aa80 [label="Return", shape=box];
-  node000001a554e7aa80 -> node000001a554e7aa30;
-  node000001a554e7aa30 [label="u", shape=box];
-  node000001a554e7b2f0 -> node000001a554e7ae40;
-  node000001a554e7ae40 [label="Return", shape=box];
-  node000001a554e7ae40 -> node000001a554e7af30;
-  node000001a554e7af30 [label="call(gcd)", shape=box];
-  node000001a554e7af30 -> node000001a554e7ab20;
-  node000001a554e7ab20 [label="v", shape=box];
-  { rank=same; node000001a554e7ab20; node000001a554e7ad50; }
-  node000001a554e7ab20 -> node000001a554e7ad50 [style=dashed];
-  node000001a554e7ad50 [label="-", shape=box];
-  node000001a554e7ad50 -> node000001a554e7ab70;
-  node000001a554e7ab70 [label="u", shape=box];
-  node000001a554e7ad50 -> node000001a554e7ad00;
-  node000001a554e7ad00 [label="*", shape=box];
-  node000001a554e7ad00 -> node000001a554e7ac60;
-  node000001a554e7ac60 [label="/", shape=box];
-  node000001a554e7ac60 -> node000001a554e7abc0;
-  node000001a554e7abc0 [label="u", shape=box];
-  node000001a554e7ac60 -> node000001a554e7ac10;
-  node000001a554e7ac10 [label="v", shape=box];
-  node000001a554e7ad00 -> node000001a554e7acb0;
-  node000001a554e7acb0 [label="v", shape=box];
-  { rank=same; node000001a554e7ae90; node000001a554e7b3e0; }
-  node000001a554e7ae90 -> node000001a554e7b3e0 [style=dashed];
-  node000001a554e7b3e0 [label="func:main", shape=box];
-  node000001a554e7b3e0 -> node000001a554e7b200;
-  node000001a554e7b200 [label="Compound", shape=box];
-  node000001a554e7b200 -> node000001a554e7b340;
-  node000001a554e7b340 [label="var:x", shape=box];
-  { rank=same; node000001a554e7b340; node000001a554e7b4d0; }
-  node000001a554e7b340 -> node000001a554e7b4d0 [style=dashed];
-  node000001a554e7b4d0 [label="var:y", shape=box];
-  node000001a554e7b200 -> node000001a554e7b070;
-  node000001a554e7b070 [label="=", shape=box];
-  node000001a554e7b070 -> node000001a554e7adf0;
-  node000001a554e7adf0 [label="x", shape=box];
-  node000001a554e7b070 -> node000001a554e7b020;
-  node000001a554e7b020 [label="call(input)", shape=box];
-  { rank=same; node000001a554e7b070; node000001a554e7b160; }
-  node000001a554e7b070 -> node000001a554e7b160 [style=dashed];
-  node000001a554e7b160 [label="=", shape=box];
-  node000001a554e7b160 -> node000001a554e7b250;
-  node000001a554e7b250 [label="y", shape=box];
-  node000001a554e7b160 -> node000001a554e7b0c0;
-  node000001a554e7b0c0 [label="call(input)", shape=box];
-  { rank=same; node000001a554e7b160; node000001a554e7b390; }
-  node000001a554e7b160 -> node000001a554e7b390 [style=dashed];
-  node000001a554e7b390 [label="call(output)", shape=box];
-  node000001a554e7b390 -> node000001a554e7b1b0;
-  node000001a554e7b1b0 [label="call(gcd)", shape=box];
-  node000001a554e7b1b0 -> node000001a554e7b2a0;
-  node000001a554e7b2a0 [label="x", shape=box];
-  { rank=same; node000001a554e7b2a0; node000001a554e7af80; }
-  node000001a554e7b2a0 -> node000001a554e7af80 [style=dashed];
-  node000001a554e7af80 [label="y", shape=box];
+  node0000024de95eae90 [label="func:gcd", shape=box];
+  node0000024de95eae90 -> node0000024de95ea170;
+  node0000024de95ea170 [label="param:u", shape=box];
+  { rank=same; node0000024de95ea170; node0000024de95ea870; }
+  node0000024de95ea170 -> node0000024de95ea870 [style=dashed];
+  node0000024de95ea870 [label="param:v", shape=box];
+  node0000024de95eae90 -> node0000024de95eb480;
+  node0000024de95eb480 [label="Compound", shape=box];
+  node0000024de95eb480 -> node0000024de95eaf80;
+  node0000024de95eaf80 [label="If", shape=box];
+  node0000024de95eaf80 -> node0000024de95ea9c0;
+  node0000024de95ea9c0 [label="==", shape=box];
+  node0000024de95ea9c0 -> node0000024de95ea920;
+  node0000024de95ea920 [label="v", shape=box];
+  node0000024de95ea9c0 -> node0000024de95ea970;
+  node0000024de95ea970 [label="0", shape=box];
+  node0000024de95eaf80 -> node0000024de95eaad0;
+  node0000024de95eaad0 [label="Compound", shape=box];
+  node0000024de95eaad0 -> node0000024de95eaa80;
+  node0000024de95eaa80 [label="Return", shape=box];
+  node0000024de95eaa80 -> node0000024de95eaa30;
+  node0000024de95eaa30 [label="u", shape=box];
+  node0000024de95eaf80 -> node0000024de95eaf30;
+  node0000024de95eaf30 [label="Return", shape=box];
+  node0000024de95eaf30 -> node0000024de95eafd0;
+  node0000024de95eafd0 [label="call(gcd)", shape=box];
+  node0000024de95eafd0 -> node0000024de95eab20;
+  node0000024de95eab20 [label="v", shape=box];
+  { rank=same; node0000024de95eab20; node0000024de95ead50; }
+  node0000024de95eab20 -> node0000024de95ead50 [style=dashed];
+  node0000024de95ead50 [label="-", shape=box];
+  node0000024de95ead50 -> node0000024de95eab70;
+  node0000024de95eab70 [label="u", shape=box];
+  node0000024de95ead50 -> node0000024de95ead00;
+  node0000024de95ead00 [label="*", shape=box];
+  node0000024de95ead00 -> node0000024de95eac60;
+  node0000024de95eac60 [label="/", shape=box];
+  node0000024de95eac60 -> node0000024de95eabc0;
+  node0000024de95eabc0 [label="u", shape=box];
+  node0000024de95eac60 -> node0000024de95eac10;
+  node0000024de95eac10 [label="v", shape=box];
+  node0000024de95ead00 -> node0000024de95eacb0;
+  node0000024de95eacb0 [label="v", shape=box];
+  { rank=same; node0000024de95eae90; node0000024de95eb340; }
+  node0000024de95eae90 -> node0000024de95eb340 [style=dashed];
+  node0000024de95eb340 [label="func:main", shape=box];
+  node0000024de95eb340 -> node0000024de95eb2a0;
+  node0000024de95eb2a0 [label="Compound", shape=box];
+  node0000024de95eb2a0 -> node0000024de95eb020;
+  node0000024de95eb020 [label="var:x", shape=box];
+  { rank=same; node0000024de95eb020; node0000024de95eb0c0; }
+  node0000024de95eb020 -> node0000024de95eb0c0 [style=dashed];
+  node0000024de95eb0c0 [label="var:y", shape=box];
+  node0000024de95eb2a0 -> node0000024de95eb4d0;
+  node0000024de95eb4d0 [label="=", shape=box];
+  node0000024de95eb4d0 -> node0000024de95eb520;
+  node0000024de95eb520 [label="x", shape=box];
+  node0000024de95eb4d0 -> node0000024de95eaee0;
+  node0000024de95eaee0 [label="call(input)", shape=box];
+  { rank=same; node0000024de95eb4d0; node0000024de95eb160; }
+  node0000024de95eb4d0 -> node0000024de95eb160 [style=dashed];
+  node0000024de95eb160 [label="=", shape=box];
+  node0000024de95eb160 -> node0000024de95eb110;
+  node0000024de95eb110 [label="y", shape=box];
+  node0000024de95eb160 -> node0000024de95eb070;
+  node0000024de95eb070 [label="call(input)", shape=box];
+  { rank=same; node0000024de95eb160; node0000024de95eb250; }
+  node0000024de95eb160 -> node0000024de95eb250 [style=dashed];
+  node0000024de95eb250 [label="call(output)", shape=box];
+  node0000024de95eb250 -> node0000024de95eb200;
+  node0000024de95eb200 [label="call(gcd)", shape=box];
+  node0000024de95eb200 -> node0000024de95eadf0;
+  node0000024de95eadf0 [label="x", shape=box];
+  { rank=same; node0000024de95eadf0; node0000024de95eb1b0; }
+  node0000024de95eadf0 -> node0000024de95eb1b0 [style=dashed];
+  node0000024de95eb1b0 [label="y", shape=box];
 }
 
 === CODIGO INTERMEDIARIO (QUADRUPLAS - LISTA ENCADEADA) ===

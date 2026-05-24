@@ -15,6 +15,9 @@ void criaTabela();
 /* Libera toda memória da tabela */
 void liberaTabela();
 
+int   getNumParams(char * funcName);
+char* getParamName(char * funcName, int index);
+
 /* Inserção na Tabela - retorna 1 se sucesso, 0 se erro (redeclaração) */
 int insere_ts(char * name, int lineno, int loc, char* scope, char* typeID, char* typeData);
 

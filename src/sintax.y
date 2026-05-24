@@ -6,6 +6,7 @@
     #include "util.h"
     #include "codegen.h"
     #include "tabelaSimbolos.h"
+    #include "asmgen.h"
 
     /* Variáveis para controlar o escopo atual */
     char * escopo = "global"; 
@@ -458,7 +459,10 @@ int main(int argc, char *argv[]) {
     printf("\n=== TABELA DE SIMBOLOS ===\n");
     print_ts(stdout); 
 
+    asmGen("saida.asm");
+    
     liberaTabela();
+    
     
     return 0;
 }
