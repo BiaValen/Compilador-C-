@@ -109,9 +109,11 @@ static void loadOpd(Operand * o, const char * reg) {
     if (opdEmpty(o)) return;
     if (opdIsConst(o)) {
         emit("    addi %s, x0, %d", reg, opdVal(o));
+        emit("   \n");
     } else {
         int off = getOffset(opdName(o));
         emit("    lw   %s, %d(x8)", reg, off);
+        emit("   \n");
     }
 }
 
@@ -120,6 +122,7 @@ static void storeOpd(Operand * o, const char * reg) {
     if (opdEmpty(o)) return;
     int off = getOffset(opdName(o));
     emit("    sw   %s, %d(x8)", reg, off);
+    emit("   \n");
 }
 
 /* ============================================================
@@ -138,7 +141,7 @@ static void genFun(Quadruple * q) {
      *   ...
      *   (N*4)(sp) = primeiro parâmetro (param 0)
      *
-     * NÃO salvamos ra de novo aqui.
+     * NÃO salva ra de novo aqui
      * Variáveis locais começam em -4(sp).
      */
     char * nome = opdName(&q->arg2);
@@ -163,9 +166,10 @@ static void genFun(Quadruple * q) {
     for (int i = 0; i < nParams; i++) {
         char * paramName = getParamName(nome, i);
         if (paramName != NULL) {
-            /* offset = (nParams - i) * 4 */
+            /* offset */
             int off = (nParams - i) * 4;
             addParam(paramName, off);
+            emit("   \n");
         }
     }
 
@@ -173,7 +177,8 @@ static void genFun(Quadruple * q) {
     emit("# ---- funcao %s (%s) | %d parametros ----", nome, tipo, nParams);
     emit("%s:", nome);
     emit("    add  x8, x2, x0");   // fp = sp
-    /* ra já foi salvo pelo caller — não salvamos de novo */
+    /* ra já foi salvo pelo caller — não salva de novo */
+    emit("   \n");
 }
 
 static void genEnd(Quadruple * q) {
@@ -190,10 +195,10 @@ static void genArith(Quadruple * q) {
     loadOpd(&q->arg1, "t0");
     loadOpd(&q->arg2, "t1");
     switch (q->op) {
-        case OP_ADD:  emit("    add  t2, t0, t1"); break;
-        case OP_SUB:  emit("    sub  t2, t0, t1"); break;
-        case OP_MULT: emit("    mul  t2, t0, t1"); break;
-        case OP_DIV:  emit("    div  t2, t0, t1"); break;
+        case OP_ADD:  emit("    add  t2, t0, t1"); emit("   \n"); break;
+        case OP_SUB:  emit("    sub  t2, t0, t1"); emit("   \n");  break;
+        case OP_MULT: emit("    mul  t2, t0, t1"); emit("   \n");break;
+        case OP_DIV:  emit("    div  t2, t0, t1"); emit("   \n"); break;
         default: break;
     }
     storeOpd(&q->result, "t2");
@@ -205,47 +210,56 @@ static void genRelational(Quadruple * q) {
     switch (q->op) {
         case OP_LT:
             emit("    slt  t2, t0, t1");
+            emit("   \n");
             break;
         case OP_GT:
             /* a > b  =  b < a */
             emit("    slt  t2, t1, t0");
+            emit("   \n");
             break;
         case OP_LE:
             /* a <= b  =  NOT(b < a) */
             emit("    slt  t2, t1, t0");
             emit("    xori t2, t2, 1");
+            emit("   \n");
             break;
         case OP_GE:
             /* a >= b  =  NOT(a < b) */
             emit("    slt  t2, t0, t1");
             emit("    xori t2, t2, 1");
+            emit("   \n");
             break;
         case OP_EQ:
             /* a XOR b == 0  sse  a == b */
-            emit("    xor  t2, t0, t1");
-            emit("    slti t2, t2, 1");
+            emit("    xor  t2, t0, t1"); // 1 se e somente se os operandos forem diferentes, se iguais - 0
+            emit("    slti t2, t2, 1"); // Set on Less Than Immediate - se t2 = 0 < 1, 1, iguais.
+            emit("   \n");
             break;
         case OP_NEQ:
-            emit("    xor  t2, t0, t1");
-            emit("    slti t2, t2, 1");
-            emit("    xori t2, t2, 1");
+            emit("    xor  t2, t0, t1"); // 1 se diferentes
+            emit("    slti t2, t2, 1"); // slti t2, 1, 1 - 0
+            emit("    xori t2, t2, 1"); // xori t2, 0, 1 - 1
+            emit("   \n");
             break;
         default: break;
     }
     storeOpd(&q->result, "t2");
 }
 
-static void genIff(Quadruple * q) {
+static void genIff(Quadruple * q) {  // IFFALSE
     loadOpd(&q->arg1, "t0");
-    emit("    beq  t0, x0, %s", opdName(&q->arg2));
+    emit("    beq  t0, x0, %s", opdName(&q->arg2));  // if(t0 == 0) goto L1; - Se a condição for falsa, pula para o label.
+    emit("   \n");
 }
 
 static void genGoto(Quadruple * q) {
     emit("    jal  x0, %s", opdName(&q->arg1));
+    emit("   \n");
 }
 
 static void genLabel(Quadruple * q) {
     emit("%s:", opdName(&q->arg1));
+    emit("   \n");
 }
 
 static void genParam(Quadruple * q) {
@@ -255,30 +269,33 @@ static void genParam(Quadruple * q) {
      * (porque depois o CALL empilha ra em 0(sp)).
      */
     loadOpd(&q->arg1, "t0");
-    emit("    addi x2, x2, -4");
-    emit("    sw   t0, 0(x2)");
+    emit("    addi x2, x2, -4"); //X2 = sp
+    emit("    sw   t0, 0(x2)"); //emplilha o argumento
+    emit("   \n");
 }
 
 static void genCall(Quadruple * q) {
     char * funcName = opdName(&q->arg1);
 
     if (strcmp(funcName, "input") == 0) {
-        emit("    lw   t0, 2044(x0)");
+        emit("    lw   t0, 2044(x0)");                           // PORTA DE ENTRADA: Scanf
         if (!opdEmpty(&q->result)) storeOpd(&q->result, "t0");
+        emit("   \n");
         return;
     }
 
     if (strcmp(funcName, "output") == 0) {
         /* Desempilha o argumento que foi empilhado via PARAM */
-        emit("    lw   t0, 0(x2)");
-        emit("    addi x2, x2, 4");
-        emit("    sw   t0, 2044(x0)");
+        emit("    lw   t0, 0(x2)");  // pega argumento da pilha
+        emit("    addi x2, x2, 4");  // remove da pilha
+        emit("    sw   t0, 2044(x0)");  // escreve na porta 
+        emit("   \n");
         return;
     }
 
     /*
      * Função geral:
-     * 1. Salva ra na stack (args já foram empilhados via PARAM)
+     * 1. Salva ra - RETURN ADRESS- na stack (args já foram empilhados via PARAM)
      * 2. Chama a função
      * 3. Restaura ra
      * 4. Desempilha os args
@@ -287,18 +304,20 @@ static void genCall(Quadruple * q) {
     int nargs = opdVal(&q->arg2);
 
     emit("    addi x2, x2, -4");
-    emit("    sw   x1, 0(x2)");           /* salva ra */
-    emit("    jal  x1, %s", funcName);    /* chama */
+    emit("    sw   x1, 0(x2)");           /* salva ENDEREÇO DE RETORNO - ra */
+    emit("    jal  x1, %s", funcName);    /* chama e guarda retorno de ra */
     emit("    lw   x1, 0(x2)");           /* restaura ra */
     emit("    addi x2, x2, 4");           /* desempilha ra */
+    emit("   \n");
 
     /* Desempilha argumentos */
     if (nargs > 0) {
         emit("    addi x2, x2, %d", nargs * 4);
     }
 
-    if (!opdEmpty(&q->result)) {
+    if (!opdEmpty(&q->result)) {   // captura retorno
         storeOpd(&q->result, "x10");
+        emit("   \n");
     }
 }
 
@@ -312,10 +331,11 @@ static void genRet(Quadruple * q) {
         loadOpd(&q->arg1, "x10");
     }
     /*
-     * ra está em 0(sp) porque o CALLER o salvou lá.
+     * ra está em 0(sp) porque o CALLER o salvou lá
      * O sp atual aponta para ra do caller.
      */
     emit("    jalr x0, x1, 0");
+    emit("   \n");
 }
 
 static void genLoad(Quadruple * q) {
@@ -327,6 +347,7 @@ static void genLoad(Quadruple * q) {
     emit("    lw   t0, %d(x2)", baseOff);
     emit("    add  t0, t0, t1");
     emit("    lw   t2, 0(t0)");
+    emit("   \n");
     storeOpd(&q->result, "t2");
 }
 
@@ -340,6 +361,7 @@ static void genStore(Quadruple * q) {
     emit("    add  t0, t0, t1");
     loadOpd(&q->arg1, "t2");
     emit("    sw   t2, 0(t0)");
+    emit("   \n");
 }
 
 /* ============================================================
@@ -351,15 +373,15 @@ static void genQuad(Quadruple * q) {
         case OP_FUN:    genFun(q);        break;
         case OP_END:    genEnd(q);        break;
         case OP_ASSIGN: genAssign(q);     break;
-        case OP_ADD:
-        case OP_SUB:
-        case OP_MULT:
+        case OP_ADD:    genArith(q);      break;
+        case OP_SUB:    genArith(q);      break;
+        case OP_MULT:   genArith(q);      break;
         case OP_DIV:    genArith(q);      break;
-        case OP_LT:
-        case OP_GT:
-        case OP_LE:
-        case OP_GE:
-        case OP_EQ:
+        case OP_LT:     genRelational(q); break;
+        case OP_GT:     genRelational(q); break;
+        case OP_LE:     genRelational(q); break;
+        case OP_GE:     genRelational(q); break;
+        case OP_EQ:     genRelational(q); break;
         case OP_NEQ:    genRelational(q); break;
         case OP_IFF:    genIff(q);        break;
         case OP_GOTO:   genGoto(q);       break;
