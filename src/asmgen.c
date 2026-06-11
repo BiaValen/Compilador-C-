@@ -39,6 +39,30 @@ typedef struct {
     char scope[64];
 } AsmSymbol;
 
+/* Para vetores */
+typedef struct { char name[64]; int baseAddr; } GlobalVet;
+static GlobalVet globalVets[50];
+static int       globalVetCount = 0;
+static int       nextGlobalAddr = 0;
+
+static void genAlloc(Quadruple * q) {
+    char * nome = opdName(&q->arg1);
+    int    tam  = opdVal(&q->arg2);
+    strcpy(globalVets[globalVetCount].name, nome);
+    globalVets[globalVetCount].baseAddr = nextGlobalAddr;
+    globalVetCount++;
+    nextGlobalAddr += tam * 4;
+    emit("# vetor global '%s[%d]' reservado no endereco %d",
+         nome, tam, nextGlobalAddr - tam*4);
+}
+
+static int getGlobalVetAddr(const char * name) {
+    for (int i = 0; i < globalVetCount; i++)
+        if (strcmp(globalVets[i].name, name) == 0)
+            return globalVets[i].baseAddr;
+    return -1;
+}
+
 static AsmSymbol asmSym[MAX_SYMS];
 static int       asmSymCount = 0;
 static int       localSize   = 0;  /* bytes alocados para locais */
@@ -288,7 +312,7 @@ static void genCall(Quadruple * q) {
         /* Desempilha o argumento que foi empilhado via PARAM */
         emit("    lw   t0, 0(x2)");  // pega argumento da pilha
         emit("    addi x2, x2, 4");  // remove da pilha
-        emit("    sw   t0, 2044(x0)");  // escreve na porta 
+        emit("    sw   t0, 2040(x0)");  // escreve na porta 
         emit("   \n");
         return;
     }
@@ -339,29 +363,39 @@ static void genRet(Quadruple * q) {
 }
 
 static void genLoad(Quadruple * q) {
-    /* dest = vet[idx] */
     loadOpd(&q->arg2, "t1");
     emit("    addi t0, x0, 2");
-    emit("    sll  t1, t1, t0");          /* t1 = idx * 4 */
-    int baseOff = getOffset(opdName(&q->arg1));
-    emit("    lw   t0, %d(x2)", baseOff);
+    emit("    sll  t1, t1, t0");
+
+    int globalAddr = getGlobalVetAddr(opdName(&q->arg1));
+    if (globalAddr >= 0) {
+        emit("    addi t0, x0, %d", globalAddr); /* vetor global */
+    } else {
+        int baseOff = getOffset(opdName(&q->arg1));
+        emit("    lw   t0, %d(x8)", baseOff);    /* parâmetro — usa x8! */
+    }
+
     emit("    add  t0, t0, t1");
     emit("    lw   t2, 0(t0)");
-    emit("   \n");
     storeOpd(&q->result, "t2");
 }
 
 static void genStore(Quadruple * q) {
-    /* vet[idx] = val */
     loadOpd(&q->arg2, "t1");
     emit("    addi t0, x0, 2");
-    emit("    sll  t1, t1, t0");          /* t1 = idx * 4 */
-    int baseOff = getOffset(opdName(&q->result));
-    emit("    lw   t0, %d(x2)", baseOff);
+    emit("    sll  t1, t1, t0");
+
+    int globalAddr = getGlobalVetAddr(opdName(&q->result));
+    if (globalAddr >= 0) {
+        emit("    addi t0, x0, %d", globalAddr); /* vetor global */
+    } else {
+        int baseOff = getOffset(opdName(&q->result));
+        emit("    lw   t0, %d(x8)", baseOff);    /* parâmetro — usa x8! */
+    }
+
     emit("    add  t0, t0, t1");
     loadOpd(&q->arg1, "t2");
     emit("    sw   t2, 0(t0)");
-    emit("   \n");
 }
 
 /* ============================================================
@@ -373,6 +407,7 @@ static void genQuad(Quadruple * q) {
         case OP_FUN:    genFun(q);        break;
         case OP_END:    genEnd(q);        break;
         case OP_ASSIGN: genAssign(q);     break;
+        case OP_ALLOC:  genAlloc(q);      break;
         case OP_ADD:    genArith(q);      break;
         case OP_SUB:    genArith(q);      break;
         case OP_MULT:   genArith(q);      break;
@@ -410,7 +445,8 @@ void asmGen(const char * outputFile) {
 
     fprintf(outFile, "# Assembly RISC-V gerado pelo Compilador C-\n");
     fprintf(outFile, "# Arquitetura: RV32IM customizada\n");
-    fprintf(outFile, "# I/O via MMIO: endereco 2044\n\n");
+    fprintf(outFile, "# I via MMIO: endereco 2044\n");
+    fprintf(outFile, "# O via MMIO: endereco 2040\n\n");
 
     // Stackpointer no valor máximo da memoria para decrementação da pilha
     fprintf(outFile, "    addi x2, x0, 8188\n"); //# 2047 × 4 = 8188
@@ -423,5 +459,8 @@ void asmGen(const char * outputFile) {
     }
 
     fclose(outFile);
+
     printf("\nAssembly gerado em: %s\n", outputFile);
 }
+
+//.\Scripts\compilar.bat

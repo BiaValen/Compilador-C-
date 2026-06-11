@@ -13,8 +13,14 @@ int fatorial(int n) {
 }
 
 int main(void) {
+    int numerodigitado;
     int x;
-    x = fatorial(5);
+    
+    /* Solicita que o usuário digite um valor (Lê do endereço 2044) */
+    numerodigitado = input();
+    
+    /* Calcula o fatorial usando o valor fornecido */
+    x = fatorial(numerodigitado);
     
     if (x >= 100) {
         return 1;

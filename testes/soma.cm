@@ -6,5 +6,5 @@ int soma(int a, int b) {
 int main(void) {
     int resultado;
     resultado = soma(5, 3);
-    return resultado;
+    output(resultado);
 }
