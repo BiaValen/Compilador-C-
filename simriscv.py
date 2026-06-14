@@ -59,7 +59,7 @@ def mem_read(addr):
         if input_idx < len(input_values):
             val = input_values[input_idx]   
             input_idx += 1
-            print(f"  [INPUT] → {val}")
+            print(f"  [INPUT] -> {val}")
             return val
         else:
             val = int(input("  [INPUT] Digite um valor: "))
@@ -72,7 +72,7 @@ def mem_read(addr):
 def mem_write(addr, val):
     """Escreve uma palavra de 32 bits na memória."""
     if addr == MMIO_OUT_ADDR:
-        print(f"  [OUTPUT] → {to_signed32(val)}")
+        print(f"  [OUTPUT] -> {to_signed32(val)}")
         output_values.append(to_signed32(val))
         return
     idx = addr // 4

@@ -11,14 +11,15 @@
 
    Quando o CALLER empilha args e chama gcd(v, u-u/v*v):
 
-       PARAM v        → addi sp,-4 / sw v, 0(sp)
-       PARAM t12      → addi sp,-4 / sw t12, 0(sp)
-       CALL gcd       → addi sp,-4 / sw ra, 0(sp) / jal ra, gcd
+       PARAM v        -> addi sp,-4 / sw v, 0(sp)
+       PARAM t12      -> addi sp,-4 / sw t12, 0(sp)
+       CALL gcd       -> salva fp, salva ra, jal ra, gcd
 
    No início de gcd (ANTES do prólogo):
        0(sp)  = ra do caller
-       4(sp)  = último PARAM empilhado  = t12 (2º argumento)
-       8(sp)  = primeiro PARAM empilhado = v  (1º argumento)
+       4(sp)  = fp antigo do caller
+       8(sp)  = último PARAM empilhado  = t12 (2º argumento)
+       12(sp) = primeiro PARAM empilhado = v  (1º argumento)
 
    O prólogo de gcd NÃO salva ra de novo — já está salvo.
    Variáveis locais crescem para BAIXO a partir de -4(sp):
@@ -44,6 +45,12 @@ typedef struct { char name[64]; int baseAddr; } GlobalVet;
 static GlobalVet globalVets[50];
 static int       globalVetCount = 0;
 static int       nextGlobalAddr = 0;
+
+static void emit(const char * fmt, ...);
+static int opdEmpty(Operand * o);
+static int opdIsConst(Operand * o);
+static char * opdName(Operand * o);
+static int opdVal(Operand * o);
 
 static void genAlloc(Quadruple * q) {
     char * nome = opdName(&q->arg1);
@@ -135,8 +142,13 @@ static void loadOpd(Operand * o, const char * reg) {
         emit("    addi %s, x0, %d", reg, opdVal(o));
         emit("   \n");
     } else {
-        int off = getOffset(opdName(o));
-        emit("    lw   %s, %d(x8)", reg, off);
+        int globalAddr = getGlobalVetAddr(opdName(o));
+        if (globalAddr >= 0) {
+            emit("    addi %s, x0, %d", reg, globalAddr);
+        } else {
+            int off = getOffset(opdName(o));
+            emit("    lw   %s, %d(x8)", reg, off);
+        }
         emit("   \n");
     }
 }
@@ -146,6 +158,69 @@ static void storeOpd(Operand * o, const char * reg) {
     if (opdEmpty(o)) return;
     int off = getOffset(opdName(o));
     emit("    sw   %s, %d(x8)", reg, off);
+    emit("   \n");
+}
+
+static void registerLocalOperand(Operand * o) {
+    if (opdEmpty(o) || opdIsConst(o)) return;
+    if (getGlobalVetAddr(opdName(o)) >= 0) return;
+    getOffset(opdName(o));
+}
+
+static void registerVectorBaseOperand(Operand * o) {
+    if (opdEmpty(o) || opdIsConst(o)) return;
+    if (getGlobalVetAddr(opdName(o)) >= 0) return;
+    getOffset(opdName(o));
+}
+
+static void scanFunctionLocals(Quadruple * funQuad) {
+    for (Quadruple * p = funQuad->next; p != NULL && p->op != OP_END; p = p->next) {
+        switch (p->op) {
+            case OP_ASSIGN:
+                registerLocalOperand(&p->arg1);
+                registerLocalOperand(&p->result);
+                break;
+            case OP_ADD:
+            case OP_SUB:
+            case OP_MULT:
+            case OP_DIV:
+            case OP_LT:
+            case OP_GT:
+            case OP_LE:
+            case OP_GE:
+            case OP_EQ:
+            case OP_NEQ:
+                registerLocalOperand(&p->arg1);
+                registerLocalOperand(&p->arg2);
+                registerLocalOperand(&p->result);
+                break;
+            case OP_IFF:
+            case OP_PARAM:
+            case OP_RET:
+                registerLocalOperand(&p->arg1);
+                break;
+            case OP_CALL:
+                registerLocalOperand(&p->result);
+                break;
+            case OP_LOAD:
+                registerVectorBaseOperand(&p->arg1);
+                registerLocalOperand(&p->arg2);
+                registerLocalOperand(&p->result);
+                break;
+            case OP_STORE:
+                registerLocalOperand(&p->arg1);
+                registerLocalOperand(&p->arg2);
+                registerVectorBaseOperand(&p->result);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+static void emitFunctionReturn(void) {
+    emit("    addi x2, x8, 0");
+    emit("    jalr x0, x1, 0");
     emit("   \n");
 }
 
@@ -160,10 +235,11 @@ static void genFun(Quadruple * q) {
      * O CALLER já salvou ra na stack antes de chamar.
      * Layout no início da função:
      *   0(sp) = ra
-     *   4(sp) = último parâmetro (param N-1)
-     *   8(sp) = penúltimo parâmetro (param N-2)
+     *   4(sp) = fp antigo do caller
+     *   8(sp) = último parâmetro (param N-1)
+     *   12(sp) = penúltimo parâmetro (param N-2)
      *   ...
-     *   (N*4)(sp) = primeiro parâmetro (param 0)
+     *   ((N+1)*4)(sp) = primeiro parâmetro (param 0)
      *
      * NÃO salva ra de novo aqui
      * Variáveis locais começam em -4(sp).
@@ -179,10 +255,7 @@ static void genFun(Quadruple * q) {
     int nParams = getNumParams(nome);
     /*
      * O primeiro PARAM empilhado fica mais longe do sp.
-     * Se temos 2 params (u, v), a ordem de empilhamento é:
-     *   PARAM v  → 4(sp)
-     *   PARAM u  → 8(sp)  (foi empilhado ANTES)
-     *   ra       → 0(sp)
+     * Entre o ra e os parametros existe o fp antigo salvo pelo caller.
      *
      * memloc 0 = primeiro parâmetro declarado = offset mais alto
      * memloc 1 = segundo parâmetro declarado  = offset menor
@@ -191,22 +264,28 @@ static void genFun(Quadruple * q) {
         char * paramName = getParamName(nome, i);
         if (paramName != NULL) {
             /* offset */
-            int off = (nParams - i) * 4;
+            int off = (nParams - i + 1) * 4;
             addParam(paramName, off);
             emit("   \n");
         }
     }
 
+    scanFunctionLocals(q);
+
     emit("");
     emit("# ---- funcao %s (%s) | %d parametros ----", nome, tipo, nParams);
     emit("%s:", nome);
     emit("    add  x8, x2, x0");   // fp = sp
+    if (localSize > 0) {
+        emit("    addi x2, x2, -%d", localSize);
+    }
     /* ra já foi salvo pelo caller — não salva de novo */
     emit("   \n");
 }
 
 static void genEnd(Quadruple * q) {
     emit("# ---- fim de %s ----", opdName(&q->arg1));
+    emitFunctionReturn();
     emit("");
 }
 
@@ -319,19 +398,22 @@ static void genCall(Quadruple * q) {
 
     /*
      * Função geral:
-     * 1. Salva ra - RETURN ADRESS- na stack (args já foram empilhados via PARAM)
+     * 1. Salva fp e ra na stack (args já foram empilhados via PARAM)
      * 2. Chama a função
-     * 3. Restaura ra
+     * 3. Restaura ra e fp
      * 4. Desempilha os args
      * 5. Captura retorno de a0
      */
     int nargs = opdVal(&q->arg2);
 
     emit("    addi x2, x2, -4");
+    emit("    sw   x8, 0(x2)");           /* salva frame pointer do caller */
+    emit("    addi x2, x2, -4");
     emit("    sw   x1, 0(x2)");           /* salva ENDEREÇO DE RETORNO - ra */
     emit("    jal  x1, %s", funcName);    /* chama e guarda retorno de ra */
     emit("    lw   x1, 0(x2)");           /* restaura ra */
-    emit("    addi x2, x2, 4");           /* desempilha ra */
+    emit("    lw   x8, 4(x2)");           /* restaura frame pointer */
+    emit("    addi x2, x2, 8");           /* desempilha ra e fp */
     emit("   \n");
 
     /* Desempilha argumentos */
@@ -354,12 +436,7 @@ static void genRet(Quadruple * q) {
     if (!opdEmpty(&q->arg1)) {
         loadOpd(&q->arg1, "x10");
     }
-    /*
-     * ra está em 0(sp) porque o CALLER o salvou lá
-     * O sp atual aponta para ra do caller.
-     */
-    emit("    jalr x0, x1, 0");
-    emit("   \n");
+    emitFunctionReturn();
 }
 
 static void genLoad(Quadruple * q) {
