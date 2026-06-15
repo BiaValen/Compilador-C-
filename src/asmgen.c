@@ -525,9 +525,15 @@ void asmGen(const char * outputFile) {
     fprintf(outFile, "# I via MMIO: endereco 2044\n");
     fprintf(outFile, "# O via MMIO: endereco 2040\n\n");
 
-    // Stackpointer no valor máximo da memoria para decrementação da pilha
-    fprintf(outFile, "    addi x2, x0, 8188\n"); //# 2047 × 4 = 8188
-    fprintf(outFile, "    jal  x0, main\n\n");
+    // Stack pointer no topo da RAM de 2048 palavras (2047 * 4 = 8188).
+    // ADDI aceita apenas imediato de 12 bits, entao 8188 em partes.
+    fprintf(outFile, "    addi x2, x0, 2047\n");
+    fprintf(outFile, "    addi x2, x2, 2047\n");
+    fprintf(outFile, "    addi x2, x2, 2047\n");
+    fprintf(outFile, "    addi x2, x2, 2047\n");
+    fprintf(outFile, "    jal  x1, main\n");
+    fprintf(outFile, "__halt:\n");
+    fprintf(outFile, "    jal  x0, __halt\n\n");
 
     Quadruple * q = headQuad;
     while (q != NULL) {
