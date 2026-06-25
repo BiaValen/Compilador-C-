@@ -1,0 +1,615 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{setspace}
+
+\geometry{left=3cm,right=2cm,top=3cm,bottom=2cm}
+\onehalfspacing
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue
+}
+
+\lstdefinestyle{codigo}{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    tabsize=4
+}
+
+\lstset{style=codigo}
+
+\newcommand{\placeholderfigure}[3][0.85\textwidth]{%
+    \begin{figure}[H]
+        \centering
+        \IfFileExists{#2}{%
+            \includegraphics[width=#1]{#2}
+        }{%
+            \fbox{%
+                \begin{minipage}[c][5cm][c]{#1}
+                    \centering
+                    \textbf{Imagem a inserir}\\[0.3cm]
+                    \texttt{#2}
+                \end{minipage}
+            }
+        }
+        \caption{#3}
+    \end{figure}
+}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\Large Universidade Federal de São Paulo\par}
+    \vspace{1.5cm}
+
+    {\LARGE\textbf{Implementação do Compilador C-}\par}
+    \vspace{2cm}
+
+    {\large Nome do aluno: \textbf{[PREENCHER]}\par}
+    \vspace{0.5cm}
+    {\large Professor: Prof. Dr. Luiz Eduardo Galvão Martins\par}
+    \vspace{2cm}
+
+    \begin{minipage}{0.82\textwidth}
+        \centering
+        Relatório apresentado à Universidade Federal de São Paulo como parte dos requisitos para aprovação na disciplina de Laboratório de Sistemas Computacionais: Compiladores.
+    \end{minipage}
+
+    \vfill
+
+    {\large [PREENCHER LOCAL]\par}
+    {\large Junho de 2026\par}
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+\chapter{Introdução}
+
+Compiladores são sistemas responsáveis por traduzir programas escritos em uma linguagem de alto nível para uma representação executável por uma máquina alvo. Essa tradução envolve etapas de análise e síntese: inicialmente o código fonte é reconhecido, estruturado e validado; em seguida, ele é transformado em código intermediário, assembly e, por fim, código binário.
+
+O projeto desenvolvido na disciplina consiste na implementação de um compilador para a linguagem C-, uma linguagem inspirada em C, porém com um conjunto reduzido de construções. O compilador implementado reconhece declarações de variáveis, vetores, funções, parâmetros, comandos condicionais, comandos de repetição, chamadas de função, entrada e saída, operadores aritméticos e operadores relacionais.
+
+Além da análise do programa fonte, o projeto inclui geração de código intermediário em quádruplas, geração de assembly para um processador RISC-V customizado e geração de código executável em formato hexadecimal. O processador utilizado como alvo foi implementado em Verilog HDL, podendo ser sintetizado no Quartus e simulado no ModelSim.
+
+O fluxo completo do projeto é:
+
+\begin{center}
+\texttt{C-} \(\rightarrow\) \texttt{tokens} \(\rightarrow\) \texttt{AST} \(\rightarrow\) \texttt{tabela de símbolos} \(\rightarrow\) \texttt{quádruplas} \(\rightarrow\) \texttt{assembly} \(\rightarrow\) \texttt{hexadecimal} \(\rightarrow\) \texttt{processador}
+\end{center}
+
+Este relatório está organizado da seguinte forma. O Capítulo 2 apresenta o processador utilizado como máquina alvo. O Capítulo 3 descreve as fases de análise do compilador. O Capítulo 4 descreve as fases de síntese. O Capítulo 5 apresenta exemplos de uso do compilador. Por fim, o Capítulo 6 discute dificuldades, destaques e trabalhos futuros.
+
+\chapter{O Processador}
+
+\section{Diagrama de Blocos do Processador}
+
+\placeholderfigure{imagens/processador_blocos.png}{Diagrama de blocos do processador RISC-V.}
+
+O processador utilizado como alvo do compilador é uma implementação RISC-V customizada em Verilog HDL. Ele possui contador de programa, memória de instruções, unidade de controle, banco de registradores, ULA, unidade de multiplicação/divisão, memória de dados e interface de entrada e saída mapeada em memória.
+
+A execução dos programas gerados pelo compilador ocorre por meio da memória de instruções inicializada com um arquivo hexadecimal. O compilador gera assembly RISC-V e o montador converte esse assembly para o arquivo \texttt{program.hex}, utilizado pelo módulo \texttt{instruction\_memory.v} por meio de \texttt{\$readmemh}.
+
+\section{Componentes do Processador}
+
+Os principais componentes do processador são:
+
+\begin{itemize}
+    \item \textbf{Program Counter (PC):} armazena o endereço da instrução atual.
+    \item \textbf{Memória de instruções:} armazena o programa em formato binário hexadecimal.
+    \item \textbf{Unidade de controle:} decodifica \texttt{opcode}, \texttt{funct3} e \texttt{funct7}, gerando sinais de controle.
+    \item \textbf{Banco de registradores:} implementa 32 registradores de 32 bits, mantendo \texttt{x0} constante em zero.
+    \item \textbf{ULA:} executa operações aritméticas, lógicas e relacionais.
+    \item \textbf{Unidade de multiplicação/divisão:} executa operações da extensão M, como \texttt{mul}, \texttt{div} e \texttt{rem}.
+    \item \textbf{Memória de dados:} armazena variáveis globais, vetores e pilha de execução.
+    \item \textbf{Interface de entrada e saída:} implementa \texttt{input()} e \texttt{output()} por endereços mapeados em memória.
+\end{itemize}
+
+\section{Conjunto de Instruções}
+
+O processador implementa um subconjunto RV32I com parte da extensão M. O compilador foi projetado para emitir apenas instruções suportadas pela máquina alvo.
+
+\begin{longtable}{lll}
+\toprule
+Classe & Instruções utilizadas & Finalidade \\
+\midrule
+Tipo R & \texttt{add}, \texttt{sub}, \texttt{slt}, \texttt{xor}, \texttt{sll}, \texttt{mul}, \texttt{div} & Operações entre registradores \\
+Tipo I & \texttt{addi}, \texttt{slti}, \texttt{xori}, \texttt{lw}, \texttt{jalr} & Imediatos, leitura de memória e retorno \\
+Tipo S & \texttt{sw} & Escrita em memória \\
+Tipo B & \texttt{beq}, \texttt{bne}, \texttt{blt}, \texttt{bge} & Desvios condicionais \\
+Tipo J & \texttt{jal} & Chamadas e desvios incondicionais \\
+\bottomrule
+\end{longtable}
+
+\section{Organização da Memória}
+
+A memória do sistema foi organizada com 8192 bytes, divididos em palavras de 32 bits. O compilador inicializa o ponteiro de pilha \texttt{x2} no topo da memória, em torno do endereço 8188, e utiliza crescimento descendente para armazenar variáveis locais, temporários, parâmetros, registrador de retorno e frame pointer.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+Registrador & Uso \\
+\midrule
+\texttt{x0} & Constante zero \\
+\texttt{x1} & Endereço de retorno, \texttt{ra} \\
+\texttt{x2} & Ponteiro de pilha, \texttt{sp} \\
+\texttt{x8} & Frame pointer, \texttt{fp} \\
+\texttt{t0}, \texttt{t1}, \texttt{t2} & Temporários usados pelo assembly gerado \\
+\bottomrule
+\end{tabular}
+\caption{Registradores utilizados pela convenção do compilador.}
+\end{table}
+
+A entrada e a saída são mapeadas em memória:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+Endereço & Função \\
+\midrule
+\texttt{2044} & Entrada de dados, usada por \texttt{input()} \\
+\texttt{2040} & Saída de dados, usada por \texttt{output()} \\
+\bottomrule
+\end{tabular}
+\caption{Endereços de I/O mapeados em memória.}
+\end{table}
+
+Vetores globais são alocados a partir da região inicial da memória de dados. Vetores passados como parâmetro são tratados como endereços-base, permitindo que funções como \texttt{sort(int a[])} e \texttt{minloc(int a[])} acessem e modifiquem o vetor original.
+
+\chapter{Compilador: Fase de Análise}
+
+\section{Modelagem}
+
+\subsection{Diagrama de Blocos SysML}
+
+\placeholderfigure{imagens/sysml_blocos_compilador.png}{Diagrama de blocos SysML do compilador.}
+
+O diagrama de blocos representa a decomposição do compilador em módulos funcionais. A estrutura geral contém o analisador léxico, o analisador sintático, o analisador semântico, a tabela de símbolos, o gerador de código intermediário, o gerador de assembly e o montador para código executável.
+
+\subsection{Diagramas de Atividades SysML}
+
+\placeholderfigure{imagens/sysml_atividade_analise.png}{Diagrama de atividade da fase de análise.}
+
+O fluxo da fase de análise começa com a leitura do arquivo fonte C-. O analisador léxico divide o texto em tokens. Em seguida, o analisador sintático verifica a estrutura gramatical e constrói a árvore sintática. Por fim, o analisador semântico percorre a árvore, preenche a tabela de símbolos e verifica erros relacionados a escopo, declarações e uso de identificadores.
+
+\section{Análise Léxica}
+
+A análise léxica foi implementada com Flex, no arquivo \texttt{src/lexer.l}. Essa fase transforma a sequência de caracteres do programa fonte em tokens. Os principais tokens reconhecidos são:
+
+\begin{itemize}
+    \item palavras-chave: \texttt{if}, \texttt{else}, \texttt{while}, \texttt{return}, \texttt{int}, \texttt{void};
+    \item identificadores e números inteiros;
+    \item operadores aritméticos: \texttt{+}, \texttt{-}, \texttt{*}, \texttt{/};
+    \item operadores relacionais: \texttt{<}, \texttt{<=}, \texttt{>}, \texttt{>=}, \texttt{==}, \texttt{!=};
+    \item delimitadores: parênteses, chaves, colchetes, ponto e vírgula e vírgula;
+    \item comentários de bloco no formato \texttt{/* ... */}.
+\end{itemize}
+
+Quando um símbolo inválido é encontrado, o analisador léxico informa a linha do erro. Essa etapa simplifica a entrada para o analisador sintático e evita que caracteres desconhecidos cheguem às fases posteriores.
+
+\section{Análise Sintática}
+
+A análise sintática foi implementada com Bison, no arquivo \texttt{src/sintax.y}. Ela reconhece a gramática da linguagem C- e constrói uma árvore sintática abstrata. A AST representa a estrutura do programa sem guardar todos os detalhes textuais do código fonte.
+
+Entre as construções reconhecidas estão declarações de variáveis simples, vetores, funções, parâmetros simples e vetoriais, comandos compostos, atribuições, \texttt{if}, \texttt{if/else}, \texttt{while}, \texttt{return}, chamadas de função e expressões aritméticas e relacionais.
+
+\placeholderfigure{../resultados/gcd.png}{Árvore sintática do programa \texttt{gcd.cm}.}
+
+\placeholderfigure{../resultados/sort.png}{Árvore sintática do programa \texttt{sort.cm}.}
+
+\section{Análise Semântica}
+
+A análise semântica utiliza a tabela de símbolos para validar o uso dos identificadores. A tabela registra nome, escopo, tipo de identificador, tipo de dado, localização e linhas de ocorrência. Essa estrutura permite detectar erros como uso de variáveis não declaradas, conflitos de declaração e inconsistências relacionadas a funções, variáveis e vetores.
+
+O controle de escopo permite diferenciar símbolos globais, símbolos locais de funções e símbolos declarados dentro de blocos internos. Isso é importante para a linguagem C-, pois funções como \texttt{sort} e \texttt{minloc} declaram variáveis locais com nomes iguais em escopos diferentes.
+
+\chapter{Compilador: Fase de Síntese}
+
+\section{Modelagem}
+
+\subsection{Diagrama de Blocos SysML}
+
+\placeholderfigure{imagens/sysml_blocos_sintese.png}{Diagrama de blocos SysML da fase de síntese.}
+
+A fase de síntese recebe como entrada a árvore sintática validada e a tabela de símbolos. A partir dessas estruturas, o compilador gera quádruplas, traduz as quádruplas para assembly RISC-V e converte o assembly para código hexadecimal.
+
+\subsection{Diagramas de Atividades SysML}
+
+\placeholderfigure{imagens/sysml_atividade_intermediario.png}{Diagrama de atividade da geração de código intermediário.}
+
+\placeholderfigure{imagens/sysml_atividade_assembly_binario.png}{Diagrama de atividade da geração de assembly e binário.}
+
+\section{Geração do Código Intermediário}
+
+O código intermediário é representado por quádruplas no formato:
+
+\begin{lstlisting}
+(op, arg1, arg2, result)
+\end{lstlisting}
+
+Cada quádrupla representa uma operação simples. Essa representação facilita a separação entre a análise da linguagem fonte e a geração de código para a arquitetura alvo.
+
+\begin{longtable}{ll}
+\toprule
+Quádrupla & Significado \\
+\midrule
+\texttt{(FUN, tipo, nome, -)} & Início de função \\
+\texttt{(END, nome, -, -)} & Fim de função \\
+\texttt{(ASSIGN, val, -, dest)} & Atribuição \\
+\texttt{(ADD, a, b, dest)} & Soma \\
+\texttt{(SUB, a, b, dest)} & Subtração \\
+\texttt{(MULT, a, b, dest)} & Multiplicação \\
+\texttt{(DIV, a, b, dest)} & Divisão \\
+\texttt{(LT, a, b, dest)} & Comparação menor que \\
+\texttt{(LE, a, b, dest)} & Comparação menor ou igual \\
+\texttt{(GT, a, b, dest)} & Comparação maior que \\
+\texttt{(GE, a, b, dest)} & Comparação maior ou igual \\
+\texttt{(EQ, a, b, dest)} & Comparação de igualdade \\
+\texttt{(NEQ, a, b, dest)} & Comparação de diferença \\
+\texttt{(IFF, cond, label, -)} & Desvio se a condição for falsa \\
+\texttt{(GOTO, label, -, -)} & Desvio incondicional \\
+\texttt{(LAB, label, -, -)} & Definição de rótulo \\
+\texttt{(PARAM, arg, -, -)} & Passagem de parâmetro \\
+\texttt{(CALL, func, nargs, dest)} & Chamada de função \\
+\texttt{(RET, val, -, -)} & Retorno de função \\
+\texttt{(LOAD, vet, idx, dest)} & Leitura de vetor \\
+\texttt{(STORE, val, idx, vet)} & Escrita em vetor \\
+\texttt{(ALLOC, vet, tam, -)} & Reserva de vetor global \\
+\bottomrule
+\end{longtable}
+
+As quádruplas são armazenadas em lista encadeada, permitindo que o gerador de assembly percorra a sequência na mesma ordem em que o programa deve ser executado.
+
+\section{Geração do Código Assembly}
+
+O módulo de geração de assembly está implementado em \texttt{src/asmgen.c}. Ele percorre a lista de quádruplas e emite instruções RISC-V compatíveis com o processador desenvolvido.
+
+A geração de assembly utiliza uma convenção simples de chamada de função:
+
+\begin{itemize}
+    \item o registrador \texttt{x2} é usado como ponteiro de pilha;
+    \item o registrador \texttt{x8} é usado como frame pointer;
+    \item os parâmetros são empilhados pelo chamador;
+    \item antes da chamada, o chamador salva \texttt{fp} e \texttt{ra};
+    \item a função chamada cria seu frame local;
+    \item o retorno é salvo no destino indicado pela quádrupla;
+    \item após a chamada, o chamador restaura \texttt{ra}, \texttt{fp} e remove os parâmetros da pilha.
+\end{itemize}
+
+Exemplo de tradução de chamada:
+
+\begin{lstlisting}
+(PARAM, x, -, -)
+(PARAM, y, -, -)
+(CALL, gcd, 2, _t18)
+\end{lstlisting}
+
+Essa sequência gera o empilhamento dos argumentos, o salvamento de \texttt{fp} e \texttt{ra}, a instrução \texttt{jal} para a função e a restauração do contexto após o retorno.
+
+As operações aritméticas e relacionais são traduzidas para instruções da ULA. Por exemplo, uma quádrupla \texttt{ADD} gera \texttt{add}, uma quádrupla \texttt{SUB} gera \texttt{sub}, \texttt{MULT} gera \texttt{mul} e \texttt{DIV} gera \texttt{div}. Comparações como \texttt{==} e \texttt{!=} são implementadas com combinações de \texttt{xor}, \texttt{slti} e \texttt{xori}.
+
+A entrada e a saída são tratadas como funções especiais:
+
+\begin{lstlisting}[language=C]
+x = input();
+output(x);
+\end{lstlisting}
+
+No assembly gerado, essas operações acessam os endereços mapeados em memória:
+
+\begin{lstlisting}
+lw   t0, 2044(x0)  # input
+sw   t0, 2040(x0)  # output
+\end{lstlisting}
+
+\section{Geração do Código Executável}
+
+A geração do código executável é feita pelo script \texttt{RISC-V/sinteses/asm\_to\_hex.py}. Esse script monta o assembly gerado pelo compilador e produz um arquivo hexadecimal compatível com \texttt{\$readmemh}.
+
+O fluxo é:
+
+\begin{lstlisting}
+.\compilador.exe .\testes\sort.cm
+python .\RISC-V\sinteses\asm_to_hex.py .\saida.asm .\RISC-V\program.hex
+\end{lstlisting}
+
+O arquivo \texttt{program.hex} contém uma instrução de 32 bits por linha:
+
+\begin{lstlisting}
+7ff00113
+7ff10113
+7ff10113
+7ff10113
+2fc000ef
+0000006f
+\end{lstlisting}
+
+\section{Gerenciamento de Memória}
+
+O gerenciamento de memória considera três regiões principais: variáveis e vetores globais, pilha de chamadas e endereços de entrada e saída mapeados em memória.
+
+Vetores globais são reservados a partir do início da memória de dados. Cada posição do vetor ocupa uma palavra de 32 bits, portanto o índice é multiplicado por 4 antes do acesso. No assembly, essa multiplicação é feita por deslocamento:
+
+\begin{lstlisting}
+addi t0, x0, 2
+sll  t1, t1, t0
+\end{lstlisting}
+
+Variáveis locais e temporários são alocados em offsets negativos em relação ao frame pointer. Parâmetros ficam em offsets positivos, pois foram empilhados antes da criação do frame da função chamada. Essa organização permite recursão, pois cada chamada possui seu próprio frame na pilha.
+
+\chapter{Exemplos}
+
+\section{Exemplo 1: GCD/MDC com Recursão}
+
+\subsection{Código Fonte}
+
+\begin{lstlisting}[language=C]
+int gcd (int u, int v)
+{
+    if (v == 0) {
+        return u;
+    }
+    else {
+        return gcd(v, u - u / v * v);
+    }
+}
+
+void main(void)
+{
+    int x; int y;
+    x = input();
+    y = input();
+    output(gcd(x, y));
+}
+\end{lstlisting}
+
+\subsection{Código Intermediário}
+
+\begin{lstlisting}
+(FUN, int, gcd, -)
+(ASSIGN, v, -, _t1)
+(ASSIGN, 0, -, _t2)
+(EQ, _t1, _t2, _t3)
+(IFF, _t3, L1, -)
+(ASSIGN, u, -, _t4)
+(RET, _t4, -, -)
+(LAB, L1, -, -)
+(PARAM, v, -, -)
+(DIV, u, v, _t9)
+(MULT, _t9, v, _t11)
+(SUB, u, _t11, _t12)
+(PARAM, _t12, -, -)
+(CALL, gcd, 2, _t13)
+(RET, _t13, -, -)
+(END, gcd, -, -)
+\end{lstlisting}
+
+\subsection{Código Assembly}
+
+\begin{lstlisting}
+gcd:
+    add  x8, x2, x0
+    addi x2, x2, -...
+
+    lw   t0, 8(x8)
+    addi t1, x0, 0
+    xor  t2, t0, t1
+    slti t2, t2, 1
+    beq  t2, x0, L1
+
+    lw   t0, 12(x8)
+    addi x2, x8, 0
+    jalr x0, x1, 0
+\end{lstlisting}
+
+\subsection{Resultado de Teste}
+
+O programa foi testado no ModelSim com três casos:
+
+\begin{lstlisting}
+gcd(48, 18) = 6
+gcd(27, 9)  = 9
+gcd(42, 0)  = 42
+
+[OK] gcd passou: 3 casos testados.
+Errors: 0, Warnings: 0
+\end{lstlisting}
+
+\placeholderfigure{imagens/wave_gcd.png}{Waveform da simulação do programa \texttt{gcd.cm}.}
+
+\section{Exemplo 2: Sort com Vetor como Parâmetro}
+
+\subsection{Código Fonte}
+
+\begin{lstlisting}[language=C]
+int vet[10];
+
+int minloc(int a[], int low, int high)
+{
+    int i; int x; int k;
+    k = low;
+    x = a[low];
+    i = low + 1;
+    while (i < high) {
+        if (a[i] < x) {
+            x = a[i];
+            k = i;
+        }
+        i = i + 1;
+    }
+    return k;
+}
+
+void sort(int a[], int low, int high)
+{
+    int i; int k;
+    i = low;
+    while (i < high - 1) {
+        int t;
+        k = minloc(a, i, high);
+        t = a[k];
+        a[k] = a[i];
+        a[i] = t;
+        i = i + 1;
+    }
+}
+\end{lstlisting}
+
+\subsection{Código Intermediário}
+
+\begin{lstlisting}
+(ALLOC, vet, 10, -)
+(FUN, int, minloc, -)
+(LOAD, a, _t2, _t3)
+(LT, _t11, _t12, _t13)
+(IFF, _t13, L3, -)
+(RET, _t20, -, -)
+(FUN, void, sort, -)
+(PARAM, a, -, -)
+(PARAM, i, -, -)
+(PARAM, high, -, -)
+(CALL, minloc, 3, _t30)
+(LOAD, a, k, _t32)
+(STORE, a[i], k, a)
+(STORE, t, i, a)
+\end{lstlisting}
+
+\subsection{Correspondência com Assembly}
+
+O acesso \texttt{a[i]} é convertido em cálculo de endereço:
+
+\begin{lstlisting}
+lw   t1, offset_i(x8)
+addi t0, x0, 2
+sll  t1, t1, t0
+lw   t0, offset_a(x8)
+add  t0, t0, t1
+lw   t2, 0(t0)
+\end{lstlisting}
+
+Para escrita em vetor, a lógica é semelhante, porém termina com \texttt{sw}.
+
+\subsection{Resultado de Teste}
+
+\begin{lstlisting}
+Entrada: 5 3 8 1 9 2 6 4 7 0
+Saida:   0 1 2 3 4 5 6 7 8 9
+
+[OK] sort passou: 10 saidas conferidas em 3873 ciclos.
+Errors: 0, Warnings: 0
+\end{lstlisting}
+
+\placeholderfigure{imagens/wave_sort.png}{Waveform da simulação do programa \texttt{sort.cm}.}
+
+\section{Exemplo 3: Teste Completo}
+
+O arquivo \texttt{teste\_completo.cm} valida várias funcionalidades em conjunto: vetores globais, vetores como parâmetro, funções \texttt{int} e \texttt{void}, chamadas aninhadas, recursão, comandos \texttt{while}, \texttt{if} e \texttt{else}, entrada, saída, operadores aritméticos e operadores relacionais.
+
+\subsection{Trecho do Código Fonte}
+
+\begin{lstlisting}[language=C]
+int fib(int n)
+{
+    if (n <= 1) {
+        return n;
+    }
+    else {
+        return fib(n - 1) + fib(n - 2);
+    }
+}
+
+void ler(int v[], int n)
+{
+    int i;
+    i = 0;
+    while (i < n) {
+        v[i] = input();
+        i = i + 1;
+    }
+}
+\end{lstlisting}
+
+\subsection{Resultado de Teste}
+
+\begin{lstlisting}
+Entrada:
+5 3 8 1 9 2
+
+Saida:
+28 2160 5 6 8 0 1 3 4 2 5
+
+[OK] teste_completo passou: 11 saidas conferidas em 2920 ciclos.
+Errors: 0
+\end{lstlisting}
+
+\chapter{Conclusão}
+
+\section{Dificuldades Encontradas}
+
+Uma das principais dificuldades do projeto foi manter a consistência entre as diferentes representações do programa: árvore sintática, tabela de símbolos, quádruplas, assembly e código binário. Cada fase depende da fase anterior, de modo que erros pequenos em escopo, temporários ou offsets de memória podem aparecer apenas durante a execução final.
+
+Outra dificuldade importante foi a implementação de chamadas de função e recursão. Para que chamadas recursivas funcionem corretamente, é necessário salvar e restaurar o endereço de retorno, preservar o frame pointer e organizar parâmetros e variáveis locais de forma consistente na pilha.
+
+Também houve desafios na integração com o processador. A memória de dados e os sinais de controle precisam seguir a mesma semântica assumida pelo código gerado. As instruções geradas pelo compilador devem estar exatamente dentro do subconjunto implementado no hardware.
+
+\section{Destaques}
+
+O projeto implementa um fluxo completo de compilação e execução. Entre os principais destaques estão a geração de tabela de símbolos com escopos, geração de árvore sintática, geração de código intermediário em quádruplas, suporte a funções, parâmetros e recursão, suporte a vetores globais e vetores como parâmetros, geração de assembly RISC-V, geração de código hexadecimal e validação em simulação HDL no ModelSim.
+
+\section{Trabalhos Futuros}
+
+Como trabalhos futuros, podem ser implementadas melhorias como suporte a mais tipos de dados, mensagens de erro semântico mais detalhadas, otimizações simples sobre as quádruplas, melhor alocação de registradores, suporte a mais instruções RISC-V, adaptação do processador para memória síncrona com pipeline ou múltiplos ciclos e automação completa da execução na placa FPGA.
+
+\chapter{Referências}
+
+\begin{enumerate}
+    \item TANENBAUM, Andrew S. Materiais de referência sobre compiladores utilizados na disciplina. [Completar com os dados bibliográficos exatos do livro indicado pelo professor.]
+    \item MARTINS, Luiz Eduardo Galvão. Slides e aulas da disciplina Laboratório de Sistemas Computacionais: Compiladores. Universidade Federal de São Paulo, 1º semestre de 2026.
+    \item CONTRERAS, Rodrigo Conalgo. Aulas e materiais de apoio sobre compiladores, análise sintática, análise semântica e geração de código.
+    \item Relatório do processador RISC-V desenvolvido no projeto. Arquivo \texttt{Relatório Final/RISCV\_relatórioFinal.pdf}.
+    \item The RISC-V Instruction Set Manual. Referência utilizada para codificação das instruções RV32I/RV32M empregadas no processador e no montador.
+\end{enumerate}
+
+\appendix
+\chapter{Lista de Figuras a Inserir}
+
+\begin{longtable}{lll}
+\toprule
+Figura & Conteúdo & Caminho sugerido \\
+\midrule
+1 & Diagrama de blocos do processador & \texttt{imagens/processador\_blocos.png} \\
+2 & Blocos SysML do compilador & \texttt{imagens/sysml\_blocos\_compilador.png} \\
+3 & Atividade da fase de análise & \texttt{imagens/sysml\_atividade\_analise.png} \\
+4 & Blocos SysML da síntese & \texttt{imagens/sysml\_blocos\_sintese.png} \\
+5 & Atividade do código intermediário & \texttt{imagens/sysml\_atividade\_intermediario.png} \\
+6 & Atividade de assembly/binário & \texttt{imagens/sysml\_atividade\_assembly\_binario.png} \\
+7 & Waveform do teste \texttt{gcd} & \texttt{imagens/wave\_gcd.png} \\
+8 & Waveform do teste \texttt{sort} & \texttt{imagens/wave\_sort.png} \\
+\bottomrule
+\end{longtable}
+
+\end{document}

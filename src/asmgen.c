@@ -52,6 +52,8 @@ static int opdIsConst(Operand * o);
 static char * opdName(Operand * o);
 static int opdVal(Operand * o);
 
+static int alreadyReturned = 0; //evitar que emita varios retornos
+
 static void genAlloc(Quadruple * q) {
     char * nome = opdName(&q->arg1);
     int    tam  = opdVal(&q->arg2);
@@ -244,6 +246,8 @@ static void genFun(Quadruple * q) {
      * NÃO salva ra de novo aqui
      * Variáveis locais começam em -4(sp).
      */
+
+    alreadyReturned = 0;
     char * nome = opdName(&q->arg2);
     char * tipo = opdName(&q->arg1);
 
@@ -285,7 +289,9 @@ static void genFun(Quadruple * q) {
 
 static void genEnd(Quadruple * q) {
     emit("# ---- fim de %s ----", opdName(&q->arg1));
-    emitFunctionReturn();
+    if (!alreadyReturned) {
+        emitFunctionReturn();   // só emite se a função não tinha return explícito
+    }
     emit("");
 }
 
@@ -437,6 +443,7 @@ static void genRet(Quadruple * q) {
         loadOpd(&q->arg1, "x10");
     }
     emitFunctionReturn();
+    alreadyReturned = 1;  // avisa que ja retornou
 }
 
 static void genLoad(Quadruple * q) {

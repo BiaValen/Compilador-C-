@@ -1,10 +1,17 @@
-/* Programa simples de soma */
+/* Soma com dois valores de entrada para testar na placa */
 int soma(int a, int b) {
     return a + b;
 }
 
 int main(void) {
+    int a;
+    int b;
     int resultado;
-    resultado = soma(5, 3);
+
+    a = input();
+    b = input();
+
+    resultado = soma(a, b);
     output(resultado);
+    return resultado;
 }

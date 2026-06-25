@@ -13,7 +13,7 @@ import re
 # ESTADO DO PROCESSADOR
 # ============================================================
 
-MEM_SIZE  = 8192       # bytes de memória
+MEM_SIZE  = 8192       # bytes de memória -> mudei pra compilar mais rapido
 MMIO_IN_ADDR = 2044       # endereço do input
 MMIO_OUT_ADDR =  2040 # endereço de saida
 
