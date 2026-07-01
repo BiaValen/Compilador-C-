@@ -372,11 +372,12 @@ static void genLabel(Quadruple * q) {
 }
 
 static void genParam(Quadruple * q) {
-    /*
-     * Empilha argumento ANTES da chamada.
-     * O último PARAM empilhado fica em 4(sp) quando a função começa
-     * (porque depois o CALL empilha ra em 0(sp)).
-     */
+/*PARAM empilha arg2   → sp aponta para arg2
+PARAM empilha arg1   → sp aponta para arg1
+CALL salva fp        → sp aponta para fp_antigo
+CALL salva ra        → sp aponta para ra
+CALL faz add x8, x2, x0  → x8 = sp atual
+*/
     loadOpd(&q->arg1, "t0");
     emit("    addi x2, x2, -4"); //X2 = sp
     emit("    sw   t0, 0(x2)"); //emplilha o argumento
