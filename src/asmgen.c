@@ -9,22 +9,15 @@
 /* ============================================================
    MODELO DE STACK — convenção adotada:
 
-   Quando o CALLER empilha args e chama gcd(v, u-u/v*v):
+   No início de gcd (APÓS o prólogo, com x8 já definido):
+       0(x8)  = fp antigo do caller
+       4(x8)  = ra do caller
+       8(x8)  = último PARAM empilhado  = t12 (2º argumento)
+       12(x8) = primeiro PARAM empilhado = v  (1º argumento)
 
-       PARAM v        -> addi sp,-4 / sw v, 0(sp)
-       PARAM t12      -> addi sp,-4 / sw t12, 0(sp)
-       CALL gcd       -> salva fp, salva ra, jal ra, gcd
-
-   No início de gcd (ANTES do prólogo):
-       0(sp)  = ra do caller
-       4(sp)  = fp antigo do caller
-       8(sp)  = último PARAM empilhado  = t12 (2º argumento)
-       12(sp) = primeiro PARAM empilhado = v  (1º argumento)
-
-   O prólogo de gcd NÃO salva ra de novo — já está salvo.
-   Variáveis locais crescem para BAIXO a partir de -4(sp):
-       -4(sp) = _t1
-       -8(sp) = _t2
+   Variáveis locais crescem para BAIXO a partir de x8:
+       -4(x8) = _t1
+       -8(x8) = _t2
        ...
    ============================================================ */
 
@@ -413,7 +406,7 @@ static void genCall(Quadruple * q) {
      */
     int nargs = opdVal(&q->arg2);
 
-    emit("    addi x2, x2, -4");
+    emit("    addi x2, x2, -4");          
     emit("    sw   x8, 0(x2)");           /* salva frame pointer do caller */
     emit("    addi x2, x2, -4");
     emit("    sw   x1, 0(x2)");           /* salva ENDEREÇO DE RETORNO - ra */
@@ -449,15 +442,16 @@ static void genRet(Quadruple * q) {
 
 static void genLoad(Quadruple * q) {
     loadOpd(&q->arg2, "t1");
-    emit("    addi t0, x0, 2");
-    emit("    sll  t1, t1, t0");
+    emit("    addi t0, x0, 2");    // t0 = 2
+    emit("    sll  t1, t1, t0");  // t1 = i << 2 = i * 4
+
 
     int globalAddr = getGlobalVetAddr(opdName(&q->arg1));
     if (globalAddr >= 0) {
-        emit("    addi t0, x0, %d", globalAddr); /* vetor global */
+        emit("    addi t0, x0, %d", globalAddr); /* vetor global - endereço fixo*/
     } else {
         int baseOff = getOffset(opdName(&q->arg1));
-        emit("    lw   t0, %d(x8)", baseOff);    /* parâmetro — usa x8! */
+        emit("    lw   t0, %d(x8)", baseOff);    /* parâmetro — usa x8! - le endereço base da pilha */
     }
 
     emit("    add  t0, t0, t1");
