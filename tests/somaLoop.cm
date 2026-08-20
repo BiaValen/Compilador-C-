@@ -1,0 +1,20 @@
+/* Teste trivial: soma de 1 ate N usando apenas while.
+   Sem funcoes auxiliares e sem vetores - programa curto,
+   pensado para rodar rapido dentro de um unico quantum. */
+
+void main(void) {
+    int n;
+    int i;
+    int soma;
+
+    n = 10;
+    i = 1;
+    soma = 0;
+
+    while (i <= n) {
+        soma = soma + i;
+        i = i + 1;
+    }
+
+    output(soma);
+}

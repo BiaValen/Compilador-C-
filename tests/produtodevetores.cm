@@ -1,0 +1,28 @@
+int a[5];
+int b[5];
+
+void main(void) {
+    int i;
+    int total;
+
+    i = 0;
+    while (i < 5) {
+        a[i] = input();
+        i = i + 1;
+    }
+
+    i = 0;
+    while (i < 5) {
+        b[i] = input();
+        i = i + 1;
+    }
+
+    total = 0;
+    i = 0;
+    while (i < 5) {
+        total = total + (a[i] * b[i]);
+        i = i + 1;
+    }
+
+    output(total);
+}

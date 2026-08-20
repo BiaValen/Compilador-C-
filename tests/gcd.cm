@@ -1,0 +1,17 @@
+/* Um programa para calcular o mdc
+    segundo o algoritmo de euclides. */
+
+int gcd (int u, int v)
+{ 	
+	if (v == 0) {return u;}
+	else return gcd(v,u-u/v*v);
+}
+
+void main(void)
+{	int x; int y;
+
+    /* valores fixos: gcd(48,18) = 6 */
+    x = 48;
+    y = 18;
+    output(gcd(x,y));
+}
