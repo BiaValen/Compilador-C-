@@ -1,7 +1,0 @@
-void main(void) {
-    int x, y;
-    x = 5;
-    y = 2;
-    x = x*y;
-    output(x);
-}

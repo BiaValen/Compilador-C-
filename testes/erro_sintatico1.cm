@@ -1,4 +1,0 @@
-/* Programa com erro sintático - falta ponto e vírgula */
-int main(void) {
-    return 0
-}

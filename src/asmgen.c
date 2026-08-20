@@ -45,7 +45,7 @@ static int opdIsConst(Operand * o);
 static char * opdName(Operand * o);
 static int opdVal(Operand * o);
 
-static int alreadyReturned = 0; //evitar que emita varios retornos
+static int alreadyReturned = 0; //flag para evitar que emita varios retornos
 
 static void genAlloc(Quadruple * q) {
     char * nome = opdName(&q->arg1);
@@ -67,7 +67,7 @@ static int getGlobalVetAddr(const char * name) {
 
 static AsmSymbol asmSym[MAX_SYMS];
 static int       asmSymCount = 0;
-static int       localSize   = 0;  /* bytes alocados para locais */
+static int       localSize   = 0;  // bytes alocados para locais //
 static char      curScope[64] = "";
 static FILE    * outFile = NULL;
 

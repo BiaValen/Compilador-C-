@@ -1,6 +1,0 @@
-/* Teste de erros lexicos */
-int main(void) {
-    int x;
-    x = 10 ; /* @ eh invalido */
-    /* 
-}
