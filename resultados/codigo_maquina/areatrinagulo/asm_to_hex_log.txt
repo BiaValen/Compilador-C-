@@ -1,0 +1,2 @@
+42 instrucoes gravadas em resultados/codigo_maquina/areatrinagulo/areatrinagulo.hex
+42 instrucoes gravadas em resultados/codigo_maquina/areatrinagulo/areatrinagulo.bin

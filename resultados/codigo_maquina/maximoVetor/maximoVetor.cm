@@ -1,0 +1,28 @@
+/* Busca do maior elemento de um vetor, sem recursao.
+   Le 5 valores, percorre o vetor comparando elemento a
+   elemento e retorna o maior encontrado. */
+
+int v[5];
+
+void main(void) {
+    int i;
+    int maior;
+
+    /* valores fixos: maior = 9 */
+    v[0] = 3;
+    v[1] = 7;
+    v[2] = 1;
+    v[3] = 9;
+    v[4] = 4;
+
+    maior = v[0];
+    i = 1;
+    while (i < 5) {
+        if (v[i] > maior) {
+            maior = v[i];
+        }
+        i = i + 1;
+    }
+
+    output(maior);
+}

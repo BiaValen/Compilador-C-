@@ -1,0 +1,2 @@
+106 instrucoes gravadas em resultados/codigo_maquina/gcd/gcd.hex
+106 instrucoes gravadas em resultados/codigo_maquina/gcd/gcd.bin

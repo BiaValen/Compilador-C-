@@ -1,0 +1,2 @@
+143 instrucoes gravadas em resultados/codigo_maquina/testeSomaRec/testeSomaRec.hex
+143 instrucoes gravadas em resultados/codigo_maquina/testeSomaRec/testeSomaRec.bin

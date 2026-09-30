@@ -16,6 +16,6 @@ void main(void) {
     v[3] = 4;
     v[4] = 5;
 
-    /* Chama recursao com o indice 4 (ultimo elemento) é pra dar 15 */
+    /* Chama recursao com o indice 4 (ultimo elemento) */
     output(somaRec(4));
 }

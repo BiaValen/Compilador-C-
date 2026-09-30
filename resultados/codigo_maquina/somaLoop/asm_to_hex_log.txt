@@ -1,0 +1,2 @@
+62 instrucoes gravadas em resultados/codigo_maquina/somaLoop/somaLoop.hex
+62 instrucoes gravadas em resultados/codigo_maquina/somaLoop/somaLoop.bin

@@ -1,0 +1,2 @@
+300 instrucoes gravadas em resultados/codigo_maquina/sort/sort.hex
+300 instrucoes gravadas em resultados/codigo_maquina/sort/sort.bin

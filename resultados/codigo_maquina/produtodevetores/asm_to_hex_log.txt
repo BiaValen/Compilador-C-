@@ -1,0 +1,2 @@
+149 instrucoes gravadas em resultados/codigo_maquina/produtodevetores/produtodevetores.hex
+149 instrucoes gravadas em resultados/codigo_maquina/produtodevetores/produtodevetores.bin

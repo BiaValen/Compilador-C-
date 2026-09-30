@@ -1,0 +1,2 @@
+91 instrucoes gravadas em resultados/codigo_maquina/fatorialINPUT/fatorialINPUT.hex
+91 instrucoes gravadas em resultados/codigo_maquina/fatorialINPUT/fatorialINPUT.bin

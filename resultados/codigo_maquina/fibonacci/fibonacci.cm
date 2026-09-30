@@ -16,7 +16,7 @@ void main(void) {
 
     int x;
 
-    /* fib(9) = 34 */
+    /* fib(10) = 34 */
     x = 9;
 
     output(fib(x));

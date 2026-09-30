@@ -1,0 +1,2 @@
+137 instrucoes gravadas em resultados/codigo_maquina/maximoVetor/maximoVetor.hex
+137 instrucoes gravadas em resultados/codigo_maquina/maximoVetor/maximoVetor.bin

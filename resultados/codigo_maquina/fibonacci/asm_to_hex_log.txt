@@ -1,0 +1,2 @@
+104 instrucoes gravadas em resultados/codigo_maquina/fibonacci/fibonacci.hex
+104 instrucoes gravadas em resultados/codigo_maquina/fibonacci/fibonacci.bin

@@ -12,14 +12,14 @@ void main(void) {
     }
 
     i = 0;
-    while (i < 3) {
+    while (i < 5) {
         b[i] = input();
         i = i + 1;
     }
 
     total = 0;
     i = 0;
-    while (i < 3) {
+    while (i < 5) {
         total = total + (a[i] * b[i]);
         i = i + 1;
     }

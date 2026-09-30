@@ -1,0 +1,2 @@
+82 instrucoes gravadas em resultados/codigo_maquina/teste4/teste4.hex
+82 instrucoes gravadas em resultados/codigo_maquina/teste4/teste4.bin

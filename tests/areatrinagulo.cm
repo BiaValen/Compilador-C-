@@ -1,0 +1,20 @@
+/* Calcula a area de um triangulo: area = (base * altura) / 2
+
+   Le base e altura via input() (chaves + Enter, uma de cada vez) e
+   devolve a area via output().
+
+   Testado com entrada: 6, 4
+   Saida esperada:      12 */
+
+void main(void)
+{
+    int base;
+    int altura;
+    int area;
+
+    base = input();
+    altura = input();
+    area = base * altura / 2;
+
+    output(area);
+}

@@ -145,7 +145,7 @@ L3:
     sw   t0, -48(x8)
    
 
-    addi t0, x0, 3
+    addi t0, x0, 5
    
 
     sw   t0, -52(x8)
@@ -261,7 +261,7 @@ L5:
     sw   t0, -92(x8)
    
 
-    addi t0, x0, 3
+    addi t0, x0, 5
    
 
     sw   t0, -96(x8)

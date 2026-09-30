@@ -112,11 +112,10 @@ static char *ensureTemp(char *name, int isAlreadyTemp) {
      - StmtK / DeclK     → devolve NULL (não produz valor)
 
    Para saber se o retorno é ID ou TEMP, usamos o campo
-   tree->isTemp que marcamos ao gerar (veja abaixo).
+   tree->isTemp que marcamos ao gerar.
    Como TreeNode pode não ter esse campo, usamos uma abordagem
    mais simples: qualquer nome que começa com 't' seguido de
-   dígito é considerado temporário gerado.  Caso seu TreeNode
-   já tenha um campo extra, adapte conforme necessário.
+   dígito é considerado temporário gerado.
 ============================================================ */
 
 /* Retorna 1 se o nome é um temporário gerado ("_t<n>").
